@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require "dante"
+require_relative "../lib/telemetry.rb"
+
+include Telemetry
+
+runner = Dante::Runner.new('telemetryd', :port => 9990)
+runner.description = "telemetryd, a daemon for sending data to www.telemetryapp.com"
+runner.with_options do |opts|
+  opts.on("-c", "--config PATH", String, "Config file location") do |config|
+    options[:config] = config
+  end
+end
+
+runner.execute do |opts|
+
+	# Load the Config File
+	config_file = opts[:config]
+	config_file ||= "/etc/telemetryd_config.rb"
+	config_file_path = File.absolute_path(config_file)
+	if File.exist?(config_file_path)
+		require_relative config_file_path
+	else
+		puts "Config file not found, please create /etc/telemetryd_config.rb or specify its location with -c"
+		exit
+	end
+
+	# Loop Forever
+	loop do
+		start_timestamp = Time.now.to_f
+		Telemetry.run_begin_interval
+		output = Telemetry.run_scheduled_flow_updates
+		Telemetry::Api.send(output)
+		Telemetry.run_end_interval
+		Telemetry.wait_for_interval_from(start_timestamp)
+	end
+end
