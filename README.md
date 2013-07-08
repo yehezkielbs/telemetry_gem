@@ -1,6 +1,6 @@
 # Telemetry
 
-This gem provides a wrapper around the Telemetry API (http://www.telemetryboard.com).  
+This gem provides a wrapper around the Telemetry API (http://www.telemetryapp.com).  
 
 ## Installation
 
