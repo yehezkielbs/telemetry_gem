@@ -50,99 +50,99 @@ module Telemetry
  		@@end_interval.yield if @@end_interval
  	end
 
-	def barchart(tag, frequency = 0, &block)
+	def barchart(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :barchart, tag, frequency, block ]
+		@@tasks << [ :barchart, tag, frequency, offset, block ]
 	end
 
-	def countdown(tag, frequency = 0, &block)
+	def countdown(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, block ]
+		@@tasks << [ :countdown, tag, frequency, offset, block ]
 	end
 
-	def gauge(tag, frequency = 0, &block)
+	def gauge(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :gauge, tag, frequency, block ]
+		@@tasks << [ :gauge, tag, frequency, offset, block ]
 	end
 
-	def graph(tag, frequency = 0, &block)
+	def graph(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :graph, tag, frequency, block ]
+		@@tasks << [ :graph, tag, frequency, offset, block ]
 	end
 
-	def icon(tag, frequency = 0, &block)
+	def icon(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :icon, tag, frequency, block ]
+		@@tasks << [ :icon, tag, frequency, offset, block ]
 	end
 
-	def iframe(tag, frequency = 0, &block)
+	def iframe(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :iframe, tag, frequency, block ]
+		@@tasks << [ :iframe, tag, frequency, offset, block ]
 	end
 
-	def log(tag, frequency = 0, &block)
+	def log(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :log, tag, frequency, block ]
+		@@tasks << [ :log, tag, frequency, offset, block ]
 	end
 
-	def map(tag, frequency = 0, &block)
+	def map(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :map, tag, frequency, block ]
+		@@tasks << [ :map, tag, frequency, offset, block ]
 	end
 
-	def multigauge(tag, frequency = 0, &block)
+	def multigauge(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :multigauge, tag, frequency, block ]
+		@@tasks << [ :multigauge, tag, frequency, offset, block ]
 	end
 
-	def multivalue(tag, frequency = 0, &block)
+	def multivalue(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :multivalue, tag, frequency, block ]
+		@@tasks << [ :multivalue, tag, frequency, offset, block ]
 	end
 
-	def servers(tag, frequency = 0, &block)
+	def servers(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :servers, tag, frequency, block ]
+		@@tasks << [ :servers, tag, frequency, offset, block ]
 	end
 
-	def table(tag, frequency = 0, &block)
+	def table(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :table, tag, frequency, block ]
+		@@tasks << [ :table, tag, frequency, offset, block ]
 	end
 
-	def text(tag, frequency = 0, &block)
+	def text(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :text, tag, frequency, block ]
+		@@tasks << [ :text, tag, frequency, offset, block ]
 	end
 
-	def tickertape(tag, frequency = 0, &block)
+	def tickertape(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :tickertape, tag, frequency, block ]
+		@@tasks << [ :tickertape, tag, frequency, offset, block ]
 	end
 
-	def timechart(tag, frequency = 0, &block)
+	def timechart(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :timechart, tag, frequency, block ]
+		@@tasks << [ :timechart, tag, frequency, offset, block ]
 	end
 
-	def timeline(tag, frequency = 0, &block)
+	def timeline(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :timeline, tag, frequency, block ]
+		@@tasks << [ :timeline, tag, frequency, offset, block ]
 	end
 
-	def timeseries(tag, frequency = 0, &block)
+	def timeseries(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :timeseries, tag, frequency, block ]
+		@@tasks << [ :timeseries, tag, frequency, offset, block ]
 	end
 
-	def upstatus(tag, frequency = 0, &block)
+	def upstatus(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :upstatus, tag, frequency, block ]
+		@@tasks << [ :upstatus, tag, frequency, offset, block ]
 	end
 
-	def value(tag, frequency = 0, &block)
+	def value(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :value, tag, frequency, block ]
+		@@tasks << [ :value, tag, frequency, offset, block ]
 	end
 
 	def run_scheduled_flow_updates
@@ -154,13 +154,26 @@ module Telemetry
 
 		@@tasks.each do |task| 
 			@@h = {}
-			variant, tag, frequency, block = task
+			variant, tag, frequency, offset, block = task
+			now = Time.now
 
 			# Check whether we should wait an interval before running
 			if frequency > 0 
 				#puts "Frequency is #{frequency} now #{Time.now.to_i} next #{@@next_run_at[tag]}"
-				next if @@next_run_at[tag] && @@next_run_at[tag] >= Time.now.to_i
-				@@next_run_at[tag] = Time.now.to_i + frequency.to_i
+				next if @@next_run_at[tag] && @@next_run_at[tag] >= now.to_i
+			  @@next_run_at[tag] = now.to_i + frequency
+
+        # If an offset is defined then allign runtimes to the offset
+        # How close you can get to the desired offset depends on the global interval. So set it relatively small
+        # when using this feature
+				if offset and offset >= 0 and offset <= 86400
+					this_morning = Time.new(now.year, now.month, now.day).to_i
+					time_since_offset = now.to_i - this_morning - offset
+					time_since_offset += 86400 if time_since_offset < 0
+
+					@@next_run_at[tag] -= time_since_offset % frequency
+					# puts "#{now.to_i} #{@@next_run_at[tag]}"
+				end
 			end
 
 			# Execute the flow
@@ -172,10 +185,10 @@ module Telemetry
 			values = @@h.merge({variant: variant})
 
 			# Skip if the values haven't changed (though send 1/day regardless)
-			if @@last_values[tag] != values || @@values_expires_at[tag] < Time.now.to_i
+			if @@last_values[tag] != values || @@values_expires_at[tag] < now.to_i
 				@@buffer[tag] = values
 				@@last_values[tag] = values # Save the value so we dont update unless it changes
-				@@values_expires_at[tag] = Time.now.to_i + 86400  # Force an update 1/day
+				@@values_expires_at[tag] = now.to_i + 86400  # Force an update 1/day
 			end
 		end
 
