@@ -6,7 +6,7 @@ require_relative "../lib/telemetry.rb"
 include Telemetry
 
 runner = Dante::Runner.new('telemetryd', :port => 9990)
-runner.description = "telemetryd, a daemon for sending data to www.telemetryapp.com"
+runner.description = "telemetryd #{Telemetry::VERSION}, a daemon for sending data to www.telemetryapp.com"
 runner.with_options do |opts|
   opts.on("-c", "--config PATH", String, "Config file location") do |config|
     options[:config] = config

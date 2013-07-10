@@ -12,11 +12,11 @@ module Telemetry
 
 			body = MultiJson.dump({:data => data})
 
-			uri = URI("https://data.telemetryapp.com/v1/data.json")
+			uri = URI("https://data.telemetryapp.com/flows")
 			request = Net::HTTP::Post.new(uri.path)
 			request.basic_auth(Telemetry.token, "")
 			request['Content-Type'] = 'application/json'
-			request['User-Agent'] = "telemetryd"
+			request['User-Agent'] = "Telemetry Ruby Gem (#{Telemetry::VERSION})"
 			request.body = body 
 
 			begin
