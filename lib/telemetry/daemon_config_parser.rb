@@ -2,14 +2,6 @@
 
 module Telemetry
 
-	def token
-		@@token
-	end
-
-	def api_token(token)
-		@@token = token
-	end
-
 	def interval(interval)
 		@@interval = interval
 	end
@@ -53,6 +45,11 @@ module Telemetry
 	def barchart(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
 		@@tasks << [ :barchart, tag, frequency, offset, block ]
+	end
+
+	def bulletchart(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :value, tag, frequency, offset, block ]
 	end
 
 	def countdown(tag, frequency = 0, offset=nil, &block)
@@ -101,6 +98,11 @@ module Telemetry
 	end
 
 	def servers(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :servers, tag, frequency, offset, block ]
+	end
+
+	def status(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
 		@@tasks << [ :servers, tag, frequency, offset, block ]
 	end

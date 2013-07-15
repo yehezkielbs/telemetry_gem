@@ -5,7 +5,7 @@ require 'telemetry/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "telemetry"
-  gem.version       = Telemetry::VERSION
+  gem.version       = Telemetry::TELEMETRY_VERSION
   gem.authors       = ["W. Gersham Meharg"]
   gem.email         = ["gersham@etosi.com"]
   gem.description   = %q{Telemetry Data Submission API Gem.  See our website for a more detailed description.}
@@ -19,4 +19,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency "oj"
   gem.add_dependency "multi_json"
   gem.add_dependency "dante"
+  gem.add_dependency "hashie"
 end

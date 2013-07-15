@@ -1,10 +1,16 @@
 #/usr/bin/env ruby
 
 module Telemetry
+
 	class Api
 		require 'multi_json'
 		require 'net/http'
 		require 'uri'
+
+		def self.post(tag, item)
+			data = {tag => item.to_hash}
+			Telemetry::Api.send(data)
+		end
 
 		def self.send(data)
 			return unless Telemetry.token
@@ -16,7 +22,7 @@ module Telemetry
 			request = Net::HTTP::Post.new(uri.path)
 			request.basic_auth(Telemetry.token, "")
 			request['Content-Type'] = 'application/json'
-			request['User-Agent'] = "Telemetry Ruby Gem (#{Telemetry::VERSION})"
+			request['User-Agent'] = "Telemetry Ruby Gem (#{Telemetry::TELEMETRY_VERSION})"
 			request.body = body 
 
 			begin
