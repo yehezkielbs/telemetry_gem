@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
 require "dante"
-require_relative "../lib/telemetry.rb"
+
+require_relative "../lib/telemetry"
 require_relative "../lib/telemetry/daemon_config_parser"
 
 include Telemetry
@@ -32,7 +33,28 @@ runner.execute do |opts|
 		start_timestamp = Time.now.to_f
 		Telemetry.run_begin_interval
 		output = Telemetry.run_scheduled_flow_updates
-		Telemetry::Api.send(output)
+
+		begin
+			Telemetry::Api.send(:post, "/flows", {:data => output})
+
+		rescue Telemetry::RateLimited
+			puts "Rate limited: sleeping for 3600s"
+			sleep 3600
+
+		rescue Telemetry::AuthenticationFailed => e
+			raise e
+
+		rescue Telemetry::AuthorizationError => e
+			raise e
+
+		rescue Telemetry::FormatError => e
+			raise e
+
+		rescue Exception => e
+			puts "Temporary exception (#{e}): sleeping for 60s"
+			sleep 60
+		end
+
 		Telemetry.run_end_interval
 		Telemetry.wait_for_interval_from(start_timestamp)
 	end

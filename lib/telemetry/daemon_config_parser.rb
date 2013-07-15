@@ -163,11 +163,11 @@ module Telemetry
 			if frequency > 0 
 				#puts "Frequency is #{frequency} now #{Time.now.to_i} next #{@@next_run_at[tag]}"
 				next if @@next_run_at[tag] && @@next_run_at[tag] >= now.to_i
-			  @@next_run_at[tag] = now.to_i + frequency
+				@@next_run_at[tag] = now.to_i + frequency
 
-        # If an offset is defined then allign runtimes to the offset
-        # How close you can get to the desired offset depends on the global interval. So set it relatively small
-        # when using this feature
+		        # If an offset is defined then align runtimes to the offset
+		        # How close you can get to the desired offset depends on the global interval. So set it relatively small
+		        # when using this feature
 				if offset and offset >= 0 and offset <= 86400
 					this_morning = Time.new(now.year, now.month, now.day).to_i
 					time_since_offset = now.to_i - this_morning - offset

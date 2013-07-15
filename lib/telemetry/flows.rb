@@ -2,26 +2,40 @@
 
 require 'hashie'
 
+module TelemetryFlows
+	def emit
+		Telemetry::Api.flow_update(self)
+	end
+end
+
 module Telemetry
 
 	# Barchart
 	class Barchart < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
   		property :bars, :default => []
 	end
 
 	# Bulletchart
 	class Bulletchart < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
   		property :bulletcharts, :default => []
 	end
 
 	# Countdown
 	class Countdown < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :time, :required => true
 		property :message, :required => true
 	end
 
 	# Gauge
 	class Gauge < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :value, :required => true
 		property :value_color
 		property :max
@@ -33,6 +47,8 @@ module Telemetry
 
 	# Graph
 	class Graph < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :renderer
 		property :series, :default => []
 		property :min_scale
@@ -42,37 +58,51 @@ module Telemetry
 
 	# Icons
 	class Icons < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :icons, :default => []
 	end
 
 	# iFrame
 	class Iframe < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :url, :required => true
 	end
 
 	# Log
 	class Log < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :messages, :default => []
 	end
 
 	# Map
 	class Map < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :map_type, :required => true
 		property :points, :default => []
 	end
 
 	# Multigauge
 	class Multigauge < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :gauges, :default => []
 	end
 
 	# Multivalue
 	class Multigauge < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :values, :default => []
 	end
 
 	# Servers
 	class Servers < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :servers, :default => []
 		property :orange
 		property :red
@@ -80,11 +110,15 @@ module Telemetry
 
 	# Status
 	class Status < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :statuses, :default => []
 	end
 
 	# Table
 	class Table < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :values, :default => []
 		property :headers, :default => []
 		property :colors, :default => []
@@ -92,29 +126,39 @@ module Telemetry
 
 	# Text
 	class Text < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :text, :required => true
 		property :alignment
 	end
 
 	# Tickertape
 	class Tickertape < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :text, :default => []
 	end
 
 	# Timechart
 	class Timechart < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :values, :default => []
 		property :type, :required => true
 	end
 
 	# Timeline
 	class Timeline < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :values, :default => []
 		property :type, :required => true
 	end
 
 	# Timeseries
 	class Timeseries < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :value, :required => true
 		property :type, :required => true
 		property :label, :required => true
@@ -125,6 +169,8 @@ module Telemetry
 
 	# Upstatus
 	class Upstatus < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :up, :default => []
 		property :down, :default => []
 		property :uptime
@@ -133,83 +179,12 @@ module Telemetry
 
 	# Value
 	class Value < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
 		property :value, :required => true
 		property :color
 		property :delta
 		property :value_type
 		property :delta_type
-	end
-
-	class Api
-		require 'multi_json'
-		require 'net/http'
-		require 'uri'
-
-		def self.post(tag, item)
-			data = {tag => item.to_hash}
-			Telemetry::Api.send(data)
-		end
-
-		def self.send(data)
-			return unless Telemetry.token
-			return unless data.size > 0
-
-			body = MultiJson.dump({:data => data})
-
-			uri = URI("https://data.telemetryapp.com/flows")
-			request = Net::HTTP::Post.new(uri.path)
-			request.basic_auth(Telemetry.token, "")
-			request['Content-Type'] = 'application/json'
-			request['User-Agent'] = "Telemetry Ruby Gem (#{Telemetry::TELEMETRY_VERSION})"
-			request.body = body 
-
-			begin
-				result = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) do |http|
-				  response = http.request(request)
-				  case response.code
-				 	when "200"
-				 		json = MultiJson.load(response.body)
-				 		if json
-				    		puts "#{Time.now} Update OK: Updated #{json["updated"].count} flows" if json["updated"] && json["updated"].count > 0
-				    		puts "#{Time.now} Update OK: Skipped #{json["skipped"].count} flows (#{json["skipped"].join(", ")})" if json["skipped"] && json["skipped"].count > 0
-				    		puts "#{Time.now} Update OK: Errors with #{json["errors"].count} flows (#{json["errors"].join(", ")})" if json["errors"] && json["errors"].count > 0
-				    	end
-				    when "400"
-				    	puts "#{Time.now} ERROR 400: Request error. #{response.body}. Exiting."
-				    	exit
-					when "401"
-				    	puts "#{Time.now} ERROR 401: Authentication failed, please check your api_token. Exiting."
-				    	exit
-				    when "403"
-				    	puts "#{Time.now} ERROR 403: Authorization failed, please check your account access. Exiting."
-				    	exit
-				    when "429"
-				    	puts "#{Time.now} ERROR 429: Rate limited. Please reduce your update interval. Pausing updates for 300s."
-				    	sleep 300
-				    when "500"
-				    	puts "#{Time.now} ERROR 500: Data API server error.  Pausing updates for 60s."
-				    	sleep 60
-				    when "503"
-				    	puts "#{Time.now} ERROR 503: Data API server is down.  Pausing updates for 60s."
-				    	sleep 60
-				    else
-				    	puts "#{Time.now} ERROR UNK: #{response.body}.  Exiting."
-				    	exit
-				  	end
-				end
-
-			rescue Errno::ETIMEDOUT => e
-				puts "#{Time.now} ERROR #{e}"
-				sleep 60
-
-			rescue Errno::ECONNREFUSED => e 
-				puts "#{Time.now} ERROR #{e}"
-				sleep 60
-
-			rescue Exception => e
-				puts "#{Time.now} ERROR #{e}"
-				sleep 60
-			end
-		end
 	end
 end
