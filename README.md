@@ -55,6 +55,13 @@ To kill the daemon:
 
 Omitting the -d will start the process in the foreground and log to stdout.  This is useful for debugging your config file.   The daemon can be started with -o to run once and exit.
 
+Custom update intervals are supported on a per flow basis.  To configure the update interval append an integer with the number of seconds to update as per the following:
+
+	gauge "test-flow-gauge", 86400 do
+		set value: 50
+	end
+
+
 ## Contributing
 
 1. Fork it
