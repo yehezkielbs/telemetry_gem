@@ -53,14 +53,14 @@ module Telemetry
 			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
 			values = flow.to_hash
 			tag = values.delete('tag')
-			puts "doing #{tag}"
 			result = Telemetry::Api.send(:put, "/flows/#{tag}", values)
 			raise ResponseError, "API Response: #{result['errors'].join(', ')}" unless result["updated"].include?(tag)
+			result
 		end
 
 		def self.flow_update_batch(flows)
 			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
-			raise RuntimeError, "Must supply flows to send" if items == 0 || items.count == 0
+			raise RuntimeError, "Must supply flows to send" if flows == 0 || flows.count == 0
 			data = {}
 			flows.each do |flow|
 				values = flow.to_hash

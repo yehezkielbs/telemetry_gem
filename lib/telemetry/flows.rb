@@ -3,6 +3,7 @@
 require 'hashie'
 
 module TelemetryFlows
+	
 	def emit
 		Telemetry::Api.flow_update(self)
 	end

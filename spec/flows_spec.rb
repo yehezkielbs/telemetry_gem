@@ -11,7 +11,7 @@ describe "Flows" do
   		tag: "test-flow-barchart",
   		bars: [{value:1000, label:'test', color:'red'}]
   	}
-  	flow = Telemetry::Barchart.new(properties).emit
+  	Telemetry::Barchart.new(properties).emit
   end
 
   it "should update a Bulletchart" do
@@ -19,7 +19,7 @@ describe "Flows" do
   		tag: "test-flow-bulletchart",
   		bulletcharts: [{value: 34, max: 4434}]
   	}
-  	flow = Telemetry::Bulletchart.new(properties).emit
+  	Telemetry::Bulletchart.new(properties).emit
   end
 
   it "should update a Countdown" do
@@ -28,7 +28,7 @@ describe "Flows" do
   		time: 1373664109, 
   		message: "Party Time"
   	}
-  	flow = Telemetry::Countdown.new(properties).emit
+  	Telemetry::Countdown.new(properties).emit
   end
 
   it "should update a Gauge" do
@@ -36,7 +36,7 @@ describe "Flows" do
   		tag: "test-flow-gauge",
   		value: 3434
   	}
-  	flow = Telemetry::Gauge.new(properties).emit
+  	Telemetry::Gauge.new(properties).emit
   end
 
   it "should update a Graph" do
@@ -44,7 +44,7 @@ describe "Flows" do
   		tag: "test-flow-graph",
   		series: [{values:[4,3,53,3,54,33,21]}]
   	}
-  	flow = Telemetry::Graph.new(properties).emit
+  	Telemetry::Graph.new(properties).emit
   end
 
   it "should update a Icons" do
@@ -52,7 +52,7 @@ describe "Flows" do
   		tag: "test-flow-icons",
   		icons: [{type: "icon-dashboard", label: "Alert", color: "red"}]
   	}
-  	flow = Telemetry::Icons.new(properties).emit
+  	Telemetry::Icons.new(properties).emit
   end
 
   it "should update a Iframe" do
@@ -60,7 +60,7 @@ describe "Flows" do
   		tag: "test-flow-iframe",
   		url: "http://www.telemetryapp.com"
   	}
-  	flow = Telemetry::Iframe.new(properties).emit
+  	Telemetry::Iframe.new(properties).emit
   end
 
   it "should update a Log" do
@@ -68,7 +68,7 @@ describe "Flows" do
   		tag: "test-flow-log",
   		messages: [{timestamp: 1373664109, text: "This is a first message", color: "red"}]
   	}
-  	flow = Telemetry::Log.new(properties).emit
+  	Telemetry::Log.new(properties).emit
   end
 
   it "should update a Map" do
@@ -77,7 +77,7 @@ describe "Flows" do
   		map_type: "asia",
   		points: [[34.344,129.344],[55.233,121.233]]
   	}
-  	flow = Telemetry::Map.new(properties).emit
+  	Telemetry::Map.new(properties).emit
   end
 
   it "should update a Multigauge" do
@@ -85,7 +85,7 @@ describe "Flows" do
   		tag: "test-flow-multigauge",
   		gauges: [{value: 34, label: "Alpha"},{value: 23, label: "Alpha"}]
   	}
-  	flow = Telemetry::Multigauge.new(properties).emit
+  	Telemetry::Multigauge.new(properties).emit
   end
 
   it "should update a Multivalue" do
@@ -93,7 +93,7 @@ describe "Flows" do
   		tag: "test-flow-multivalue",
   		values: [{value: 34, label: "Alpha"},{value: 344, label: "Bravo"}]
   	}
-  	flow = Telemetry::Multivalue.new(properties).emit
+  	Telemetry::Multivalue.new(properties).emit
   end
 
   it "should update a Servers" do
@@ -101,7 +101,7 @@ describe "Flows" do
   		tag: "test-flow-servers",
   		servers: [{values: [33,22,55], title: "Alpha"}]
   	}
-  	flow = Telemetry::Servers.new(properties).emit
+  	Telemetry::Servers.new(properties).emit
   end
 
   it "should update a Status" do
@@ -109,7 +109,7 @@ describe "Flows" do
   		tag: "test-flow-status",
   		statuses: [{label: "Alpha", color: "red"}]
   	}
-  	flow = Telemetry::Status.new(properties).emit
+  	Telemetry::Status.new(properties).emit
   end
 
   it "should update a Table" do
@@ -117,7 +117,7 @@ describe "Flows" do
   		tag: "test-flow-table",
   		table: [["Row1Col1", "Row1Col2", "Row1Col3"]]
   	}
-  	flow = Telemetry::Table.new(properties).emit
+  	Telemetry::Table.new(properties).emit
   end
 
   it "should update a Text" do
@@ -125,7 +125,7 @@ describe "Flows" do
   		tag: "test-flow-text",
   		text: "testing"
   	}
-  	flow = Telemetry::Text.new(properties).emit
+  	Telemetry::Text.new(properties).emit
   end
 
   it "should update a Tickertape" do
@@ -133,7 +133,7 @@ describe "Flows" do
   		tag: "test-flow-tickertape",
   		messages: ["Hello World!"]
   	}
-  	flow = Telemetry::Tickertape.new(properties).emit
+  	Telemetry::Tickertape.new(properties).emit
   end
 
   it "should update a Timechart" do
@@ -142,7 +142,7 @@ describe "Flows" do
   		type: "week",
   		values: [34,123,76,43,45,16,48]
   	}
-  	flow = Telemetry::Timechart.new(properties).emit
+  	Telemetry::Timechart.new(properties).emit
   end
 
   it "should update a Timeline" do
@@ -150,7 +150,7 @@ describe "Flows" do
   		tag: "test-flow-timeline",
   		messages: [{timestamp: 1373665284, from: "Telemetry", text: "This is the second message"}]
   	}
-  	flow = Telemetry::Timeline.new(properties).emit
+  	Telemetry::Timeline.new(properties).emit
   end
 
    it "should update a Timeseries" do
@@ -160,7 +160,7 @@ describe "Flows" do
  		type: "hour", 
  		label: "Alpha" 		
    	}
-  	flow = Telemetry::Timeseries.new(properties).emit
+  	Telemetry::Timeseries.new(properties).emit
   end
 
   it "should update a Upstatus" do
@@ -168,7 +168,7 @@ describe "Flows" do
       tag: "test-flow-upstatus",
       up: ["www.telemetryapp.com"] 		
    	}
-  	flow = Telemetry::Upstatus.new(properties).emit
+  	Telemetry::Upstatus.new(properties).emit
   end
 
   it "should update a Value" do
@@ -176,7 +176,7 @@ describe "Flows" do
   		tag: "test-flow-value",
   		value: 3434
    	}
-  	flow = Telemetry::Value.new(properties).emit
+  	Telemetry::Value.new(properties).emit
   end
 
 
