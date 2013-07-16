@@ -93,7 +93,7 @@ module Telemetry
 	end
 
 	# Multivalue
-	class Multigauge < Hashie::Dash
+	class Multivalue < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
 		property :values, :default => []
@@ -119,7 +119,7 @@ module Telemetry
 	class Table < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
-		property :values, :default => []
+		property :table, :default => []
 		property :headers, :default => []
 		property :colors, :default => []
 	end
@@ -136,7 +136,7 @@ module Telemetry
 	class Tickertape < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
-		property :text, :default => []
+		property :messages, :default => []
 	end
 
 	# Timechart
@@ -151,8 +151,7 @@ module Telemetry
 	class Timeline < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
-		property :values, :default => []
-		property :type, :required => true
+		property :messages, :default => []
 	end
 
 	# Timeseries

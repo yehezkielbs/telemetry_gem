@@ -9,6 +9,15 @@ module Telemetry
 
 	@affiliate_id
 	@token = nil
+	@api_host = "https://data.telemetryapp.com"
+
+	def self.api_host
+		@api_host
+	end
+
+	def self.api_host=(api_host)
+		@api_host = api_host
+	end
 
 	def self.token
 		@token
@@ -44,7 +53,9 @@ module Telemetry
 			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
 			values = flow.to_hash
 			tag = values.delete('tag')
-			Telemetry::Api.send(:put, "/flows/#{tag}", values)
+			puts "doing #{tag}"
+			result = Telemetry::Api.send(:put, "/flows/#{tag}", values)
+			raise ResponseError, "API Response: #{result['errors'].join(', ')}" unless result["updated"].include?(tag)
 		end
 
 		def self.flow_update_batch(flows)
@@ -56,12 +67,12 @@ module Telemetry
 				tag = values.delete('tag')
 				data[tag] = values
 			end
-			Telemetry::Api.send(:post, "/flows", {:data => data})
+			return Telemetry::Api.send(:post, "/flows", {:data => data})
 		end
 
 		def self.send(method, endpoint, data = nil)
 
-			uri = URI("https://data.telemetryapp.com#{endpoint}")
+			uri = URI("#{Telemetry.api_host}#{endpoint}")
 
 			if method == :post
 				request = Net::HTTP::Post.new(uri.path)
@@ -81,13 +92,14 @@ module Telemetry
 			request['User-Agent'] = "Telemetry Ruby Gem (#{Telemetry::TELEMETRY_VERSION})"
 				
 			begin
-				result = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) do |http|
+				ssl = true if Telemetry.api_host.match(/^https/)
+				result = Net::HTTP.start(uri.host, uri.port, :use_ssl => ssl) do |http|
 					response = http.request(request)
 					code = response.code
 
 					case response.code
 					when "200"
-						return
+						return MultiJson.load(response.body)
 					when "400"
 						json = MultiJson.load(response.body)
 						raise Telemetry::FormatError, "#{Time.now} (HTTP 400): #{json['code'] if json} #{json['message'] if json}"
@@ -100,11 +112,13 @@ module Telemetry
 					when "403"
 						raise Telemetry::AuthorizationError, "#{Time.now} (HTTP 403): Authorization failed, please check your account access."
 					when "404"
-						raise Telemetry::FlowNotFound, "#{Time.now} (HTTP 404): Unable to find a flow with that tag."
+						raise Telemetry::FlowNotFound, "#{Time.now} (HTTP 404): Requested object not found."
 					when "429"
 						raise Telemetry::RateLimited, "#{Time.now} (HTTP 429): Rate limited. Please reduce your update interval."
 					when "500"
 						raise Telemetry::ServerException, "#{Time.now} (HTTP 500): Data API server error."
+					when "502"
+						raise Telemetry::Unavailable, "#{Time.now} (HTTP 502): Data API server is down."
 					when "503"
 						raise Telemetry::Unavailable, "#{Time.now} (HTTP 503): Data API server is down."
 					else
@@ -150,5 +164,9 @@ module Telemetry
 
 	class ConnectionError < Exception
 	end
+
+	class ResponseError < Exception
+	end
+
 
 end
