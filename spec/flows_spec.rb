@@ -155,10 +155,10 @@ describe "Flows" do
 
    it "should update a Timeseries" do
   	properties = {
-  		tag: "test-flow-timeseries",
- 		value: 33, 
- 		type: "hour", 
- 		label: "Alpha" 		
+      tag: "test-flow-timeseries",
+      value: 33, 
+      type: "hour", 
+      label: "Alpha" 		
    	}
   	Telemetry::Timeseries.new(properties).emit
   end
@@ -179,6 +179,5 @@ describe "Flows" do
   	Telemetry::Value.new(properties).emit
   end
 
-
-
 end
+
