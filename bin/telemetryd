@@ -27,7 +27,7 @@ runner.execute do |opts|
 	if File.exist?(config_file_path)
 		require_relative config_file_path
 	else
-		puts "Config file not found, please create /etc/telemetryd_config.rb or specify its location with -c"
+		Telemetry::logger.error "Config file not found, please create /etc/telemetryd_config.rb or specify its location with -c"
 		exit
 	end
 
@@ -41,7 +41,7 @@ runner.execute do |opts|
 			Telemetry::Api.send(:post, "/flows", {:data => output})
 
 		rescue Telemetry::RateLimited
-			puts "Rate limited: sleeping for 3600s"
+			Telemetry::logger.error "Rate limited: sleeping for 3600s"
 			sleep 3600
 
 		rescue Telemetry::AuthenticationFailed => e
@@ -54,11 +54,11 @@ runner.execute do |opts|
 			raise e
 
 		rescue Exception => e
-			puts "Temporary exception (#{e}): sleeping for 60s"
+			Telemetry::logger.error "Temporary exception (#{e}): sleeping for 60s"
 			sleep 60
 		end
 
-		exit if options[:once]
+		exit if opts[:once]
 
 		Telemetry.run_end_interval
 		Telemetry.wait_for_interval_from(start_timestamp)

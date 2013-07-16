@@ -3,10 +3,9 @@ require 'spec_helper'
 describe "Flows" do
   before(:all) do
   	Telemetry.token = "test-api-token"
-  	Telemetry.api_host = "http://data.test.telemetryapp.com"
   end
 
-  it "should update a Barchart" do
+  it "should update a Barchart", flows: true do
   	properties = {
   		tag: "test-flow-barchart",
   		bars: [{value:1000, label:'test', color:'red'}]
@@ -14,7 +13,7 @@ describe "Flows" do
   	Telemetry::Barchart.new(properties).emit
   end
 
-  it "should update a Bulletchart" do
+  it "should update a Bulletchart", flows: true  do
   	properties = {
   		tag: "test-flow-bulletchart",
   		bulletcharts: [{value: 34, max: 4434}]
@@ -22,7 +21,7 @@ describe "Flows" do
   	Telemetry::Bulletchart.new(properties).emit
   end
 
-  it "should update a Countdown" do
+  it "should update a Countdown", flows: true  do
   	properties = {
   		tag: "test-flow-countdown",
   		time: 1373664109, 

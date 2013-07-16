@@ -4,19 +4,29 @@ require 'multi_json'
 require 'oj'
 require 'net/http'
 require 'uri'
+require 'logger'
 
 module Telemetry
 
 	@affiliate_id
 	@token = nil
-	@api_host = "https://data.telemetryapp.com"
 
 	def self.api_host
-		@api_host
+		if ENV["RACK_ENV"] == 'development' || ENV["RACK_ENV"] == 'test'
+			"http://data.test.telemetryapp.com"
+		else
+			"https://data.telemetryapp.com"
+		end
 	end
 
-	def self.api_host=(api_host)
-		@api_host = api_host
+	def self.logger
+		@logger ||= Logger.new(STDOUT)
+		if ENV['RACK_ENV'] == 'development'
+			@logger.level = Logger::DEBUG
+		else
+			@logger.level = Logger::WARN
+		end
+		@logger
 	end
 
 	def self.token
@@ -74,6 +84,8 @@ module Telemetry
 
 			uri = URI("#{Telemetry.api_host}#{endpoint}")
 
+			Telemetry::logger.debug "REQ #{uri} - #{MultiJson.dump(data)}"
+
 			if method == :post
 				request = Net::HTTP::Post.new(uri.path)
 				request.body = MultiJson.dump(data) 
@@ -97,40 +109,65 @@ module Telemetry
 					response = http.request(request)
 					code = response.code
 
+					Telemetry::logger.debug "RESP: #{response.code}:#{response.body}"
+
 					case response.code
 					when "200"
 						return MultiJson.load(response.body)
 					when "400"
 						json = MultiJson.load(response.body)
-						raise Telemetry::FormatError, "#{Time.now} (HTTP 400): #{json['code'] if json} #{json['message'] if json}"
+						error = "#{Time.now} (HTTP 400): #{json['code'] if json} #{json['message'] if json}"
+						Telemetry::logger.error error
+						raise Telemetry::FormatError, error
 					when "401"
 						if Telemetry.token == nil
-							raise Telemetry::AuthenticationFailed, "#{Time.now} (HTTP 401): Authentication failed, please set Telemetry.token to your API Token."
+							error = "#{Time.now} (HTTP 401): Authentication failed, please set Telemetry.token to your API Token."
+							Telemetry::logger.error error
+							raise Telemetry::AuthenticationFailed, error
 						else
-							raise Telemetry::AuthenticationFailed, "#{Time.now} (HTTP 401): Authentication failed, please verify your token."
+							error = "#{Time.now} (HTTP 401): Authentication failed, please verify your token."
+							Telemetry::logger.error error
+							raise Telemetry::AuthenticationFailed, error
 						end
 					when "403"
-						raise Telemetry::AuthorizationError, "#{Time.now} (HTTP 403): Authorization failed, please check your account access."
+						error = "#{Time.now} (HTTP 403): Authorization failed, please check your account access."
+						Telemetry::logger.error error
+						raise Telemetry::AuthorizationError, error
 					when "404"
-						raise Telemetry::FlowNotFound, "#{Time.now} (HTTP 404): Requested object not found."
+						error = "#{Time.now} (HTTP 404): Requested object not found."
+						Telemetry::logger.error error
+						raise Telemetry::FlowNotFound, error
 					when "429"
-						raise Telemetry::RateLimited, "#{Time.now} (HTTP 429): Rate limited. Please reduce your update interval."
+						error = "#{Time.now} (HTTP 429): Rate limited. Please reduce your update interval."
+						Telemetry::logger.error error
+						raise Telemetry::RateLimited, error
 					when "500"
-						raise Telemetry::ServerException, "#{Time.now} (HTTP 500): Data API server error."
+						error = "#{Time.now} (HTTP 500): Data API server error."
+						Telemetry::logger.error error
+						raise Telemetry::ServerException, error
 					when "502"
-						raise Telemetry::Unavailable, "#{Time.now} (HTTP 502): Data API server is down."
+						error = "#{Time.now} (HTTP 502): Data API server is down."
+						Telemetry::logger.error error
+						raise Telemetry::Unavailable, error
 					when "503"
-						raise Telemetry::Unavailable, "#{Time.now} (HTTP 503): Data API server is down."
+						error = "#{Time.now} (HTTP 503): Data API server is down."
+						Telemetry::logger.error error
+						raise Telemetry::Unavailable, error
 					else
-						raise Telemetry::UnknownError, "#{Time.now} ERROR UNK: #{response.body}."
+						error = "#{Time.now} ERROR UNK: #{response.body}."
+						raise Telemetry::UnknownError, error
 					end
 				end
 
 			rescue Errno::ETIMEDOUT => e
-				raise Telemetry::ConnectionError, "#{Time.now} ERROR #{e}"
+				error = "#{Time.now} ERROR #{e}"
+				Telemetry::logger.error error
+				raise Telemetry::ConnectionError, error
 
 			rescue Errno::ECONNREFUSED => e 
-				raise Telemetry::ConnectionError, "#{Time.now} ERROR #{e}"
+				error = "#{Time.now} ERROR #{e}"
+				Telemetry::logger.error error
+				raise Telemetry::ConnectionError, error
 
 			rescue Exception => e
 				raise e

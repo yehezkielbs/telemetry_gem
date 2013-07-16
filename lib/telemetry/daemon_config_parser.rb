@@ -2,6 +2,10 @@
 
 module Telemetry
 
+	def api_token(token)
+		Telemetry.token = token
+	end
+
 	def interval(interval)
 		@@interval = interval
 	end
@@ -161,7 +165,7 @@ module Telemetry
 
 			# Check whether we should wait an interval before running
 			if frequency > 0 
-				#puts "Frequency is #{frequency} now #{Time.now.to_i} next #{@@next_run_at[tag]}"
+				#Telemetry::logger.debug "Update frequency is #{frequency} now #{Time.now.to_i} next #{@@next_run_at[tag]}"
 				next if @@next_run_at[tag] && @@next_run_at[tag] >= now.to_i
 				@@next_run_at[tag] = now.to_i + frequency
 
@@ -174,7 +178,7 @@ module Telemetry
 					time_since_offset += 86400 if time_since_offset < 0
 
 					@@next_run_at[tag] -= time_since_offset % frequency
-					# puts "#{now.to_i} #{@@next_run_at[tag]}"
+					#Telemetry::logger.debug "#{now.to_i} #{@@next_run_at[tag]}"
 				end
 			end
 
