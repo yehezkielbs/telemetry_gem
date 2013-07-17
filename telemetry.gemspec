@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Telemetry Data Submission API Gem.  See our website for a more detailed description.}
   gem.summary       = %q{Telemetry Data Submission API Gem}
   gem.homepage      = "http://www.telemetryapp.com"
+  gem.license = 'MIT'
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
