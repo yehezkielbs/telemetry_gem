@@ -19,12 +19,18 @@ module Telemetry
 		end
 	end
 
+	def self.logger=(logger)
+		@logger = logger
+	end
+
 	def self.logger
-		@logger ||= Logger.new(STDOUT)
-		if ENV['RACK_ENV'] == 'development'
-			@logger.level = Logger::DEBUG
-		else
-			@logger.level = Logger::WARN
+		unless @logger
+			@logger = Logger.new(STDOUT)
+			if ENV['RACK_ENV'] == 'development'
+				@logger.level = Logger::DEBUG
+			else
+				@logger.level = Logger::WARN
+			end
 		end
 		@logger
 	end

@@ -57,7 +57,7 @@ module Telemetry
 	end
 
 	# Icons
-	class Icons < Hashie::Dash
+	class Icon < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
 		property :icons, :default => []
