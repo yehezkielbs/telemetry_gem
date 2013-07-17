@@ -10,6 +10,7 @@ module Telemetry
 
 	@affiliate_id
 	@token = nil
+	@logger = nil
 
 	def self.api_host
 		if ENV["RACK_ENV"] == 'development' || ENV["RACK_ENV"] == 'test'
@@ -119,48 +120,55 @@ module Telemetry
 
 					case response.code
 					when "200"
+						Telemetry::logger.debug response.body
 						return MultiJson.load(response.body)
 					when "400"
 						json = MultiJson.load(response.body)
 						error = "#{Time.now} (HTTP 400): #{json['code'] if json} #{json['message'] if json}"
+						Telemetry::logger.debug response.body
 						Telemetry::logger.error error
 						raise Telemetry::FormatError, error
 					when "401"
 						if Telemetry.token == nil
-							error = "#{Time.now} (HTTP 401): Authentication failed, please set Telemetry.token to your API Token."
+							error = "#{Time.now} (HTTP 401): Authentication failed, please set Telemetry.token to your API Token. #{method.upcase} #{uri}"
 							Telemetry::logger.error error
 							raise Telemetry::AuthenticationFailed, error
 						else
-							error = "#{Time.now} (HTTP 401): Authentication failed, please verify your token."
+							error = "#{Time.now} (HTTP 401): Authentication failed, please verify your token. #{method.upcase} #{uri}"
 							Telemetry::logger.error error
 							raise Telemetry::AuthenticationFailed, error
 						end
 					when "403"
-						error = "#{Time.now} (HTTP 403): Authorization failed, please check your account access."
+						error = "#{Time.now} (HTTP 403): Authorization failed, please check your account access. #{method.upcase} #{uri}"
 						Telemetry::logger.error error
 						raise Telemetry::AuthorizationError, error
 					when "404"
-						error = "#{Time.now} (HTTP 404): Requested object not found."
+						error = "#{Time.now} (HTTP 404): Requested object not found. #{method.upcase} #{uri}"
 						Telemetry::logger.error error
 						raise Telemetry::FlowNotFound, error
+					when "405"
+						error = "#{Time.now} (HTTP 405): Method not allowed. #{method.upcase} #{uri}"
+						Telemetry::logger.error error
+						raise Telemetry::MethodNotAllowed, error
 					when "429"
-						error = "#{Time.now} (HTTP 429): Rate limited. Please reduce your update interval."
+						error = "#{Time.now} (HTTP 429): Rate limited. Please reduce your update interval. #{method.upcase} #{uri}"
 						Telemetry::logger.error error
 						raise Telemetry::RateLimited, error
 					when "500"
-						error = "#{Time.now} (HTTP 500): Data API server error."
+						error = "#{Time.now} (HTTP 500): Data API server error. #{method.upcase} #{uri}"
 						Telemetry::logger.error error
+						Telemetry::logger.error response.body
 						raise Telemetry::ServerException, error
 					when "502"
-						error = "#{Time.now} (HTTP 502): Data API server is down."
+						error = "#{Time.now} (HTTP 502): Data API server is down. #{method.upcase} #{uri}"
 						Telemetry::logger.error error
 						raise Telemetry::Unavailable, error
 					when "503"
-						error = "#{Time.now} (HTTP 503): Data API server is down."
+						error = "#{Time.now} (HTTP 503): Data API server is down. #{method.upcase} #{uri}"
 						Telemetry::logger.error error
 						raise Telemetry::Unavailable, error
 					else
-						error = "#{Time.now} ERROR UNK: #{response.body}."
+						error = "#{Time.now} ERROR UNK: #{method.upcase} #{uri} #{response.body}."
 						raise Telemetry::UnknownError, error
 					end
 				end
@@ -209,6 +217,9 @@ module Telemetry
 	end
 
 	class ResponseError < Exception
+	end
+
+	class MethodNotAllowed < Exception
 	end
 
 
