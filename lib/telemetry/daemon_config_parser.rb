@@ -6,6 +6,14 @@ module Telemetry
 		Telemetry.token = token
 	end
 
+	def log_level(log_level)
+		level = log_level.to_s
+		if log_level == 'debug'
+			Telemetry.logger.level = Logger::DEBUG
+			Telemetry.logger.debug "Starting Debug Logging" 
+		end
+	end
+
 	def interval(interval)
 		@@interval = interval
 	end

@@ -37,6 +37,8 @@ runner.execute do |opts|
 		Telemetry.run_begin_interval
 		output = Telemetry.run_scheduled_flow_updates
 
+		Telemetry::logger.debug "Beginning run"
+
 		begin
 			Telemetry::Api.send(:post, "/flows", {:data => output})
 
@@ -59,6 +61,8 @@ runner.execute do |opts|
 		end
 
 		exit if opts[:once]
+
+		Telemetry::logger.debug "Pausing"
 
 		Telemetry.run_end_interval
 		Telemetry.wait_for_interval_from(start_timestamp)
