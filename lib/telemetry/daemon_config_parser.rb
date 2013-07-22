@@ -171,11 +171,18 @@ module TelemetryDaemon
 			variant, tag, frequency, offset, block = task
 			now = Time.now
 
+
 			# Check whether we should wait an interval before running
 			if frequency > 0 
+				Telemetry::logger.debug "Task #{task[0]} #{task[1]} (every #{task[2]}s)"
 				#Telemetry::logger.debug "Update frequency is #{frequency} now #{Time.now.to_i} next #{@@next_run_at[tag]}"
-				next if @@next_run_at[tag] && @@next_run_at[tag] >= now.to_i
+				if @@next_run_at[tag] && @@next_run_at[tag] > now.to_i
+					puts "  - Not scheduled yet (waiting #{-(now.to_i - @@next_run_at[tag])}s)"
+					next
+				end
 				@@next_run_at[tag] = now.to_i + frequency
+
+				Telemetry::logger.debug "  - Running intermittant task at #{now}"
 
 		        # If an offset is defined then align runtimes to the offset
 		        # How close you can get to the desired offset depends on the global interval. So set it relatively small
@@ -188,9 +195,12 @@ module TelemetryDaemon
 					@@next_run_at[tag] -= time_since_offset % frequency
 					#Telemetry::logger.debug "#{now.to_i} #{@@next_run_at[tag]}"
 				end
+			else
+				Telemetry::logger.debug "  - Task #{task[0]} #{task[1]}"
 			end
 
 			# Execute the flow
+			Telemetry.logger.debug "  + Executing task #{task[0]} #{task[1]}"
 			block.yield
 
 			next if @hh == {}

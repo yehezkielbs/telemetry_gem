@@ -39,10 +39,11 @@ runner.execute do |opts|
 		TelemetryDaemon.run_begin_interval
 		output = TelemetryDaemon.run_scheduled_flow_updates
 
-		Telemetry::logger.debug "Beginning run"
-
 		begin
-			Telemetry::Api.send(:post, "/flows", {:data => output})
+			unless output == {}
+				Telemetry::logger.debug "Beginning run"
+				Telemetry::Api.send(:post, "/flows", {:data => output}) 
+			end
 
 		rescue Telemetry::RateLimited
 			Telemetry::logger.error "Rate limited: sleeping for 3600s"
@@ -64,7 +65,7 @@ runner.execute do |opts|
 
 		exit if opts[:once]
 
-		Telemetry::logger.debug "Pausing"
+		Telemetry::logger.debug "Waiting...\n"
 
 		TelemetryDaemon.run_end_interval
 		TelemetryDaemon.wait_for_interval_from(start_timestamp)
