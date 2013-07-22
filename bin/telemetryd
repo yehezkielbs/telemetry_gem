@@ -2,9 +2,11 @@
 
 require "dante"
 
-require_relative "../lib/telemetry"
+require_relative "../lib/telemetry/version"
+require_relative "../lib/telemetry/api"
 require_relative "../lib/telemetry/daemon_config_parser"
 
+include TelemetryDaemon
 include Telemetry
 
 runner = Dante::Runner.new('telemetryd', :port => 9990)
@@ -34,8 +36,8 @@ runner.execute do |opts|
 	# Loop Forever
 	loop do
 		start_timestamp = Time.now.to_f
-		Telemetry.run_begin_interval
-		output = Telemetry.run_scheduled_flow_updates
+		TelemetryDaemon.run_begin_interval
+		output = TelemetryDaemon.run_scheduled_flow_updates
 
 		Telemetry::logger.debug "Beginning run"
 
@@ -64,7 +66,7 @@ runner.execute do |opts|
 
 		Telemetry::logger.debug "Pausing"
 
-		Telemetry.run_end_interval
-		Telemetry.wait_for_interval_from(start_timestamp)
+		TelemetryDaemon.run_end_interval
+		TelemetryDaemon.wait_for_interval_from(start_timestamp)
 	end
 end

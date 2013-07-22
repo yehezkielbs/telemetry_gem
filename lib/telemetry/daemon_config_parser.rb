@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-module Telemetry
+module TelemetryDaemon
 
 	def api_token(token)
 		Telemetry.token = token
