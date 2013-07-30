@@ -14,20 +14,23 @@ module Telemetry
 	class Barchart < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
-  		property :bars, :default => []
+		property :title
+  	property :bars, :default => []
 	end
 
 	# Bulletchart
 	class Bulletchart < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
-  		property :bulletcharts, :default => []
+		property :title
+  	property :bulletcharts, :default => []
 	end
 
 	# Countdown
 	class Countdown < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :time, :required => true
 		property :message, :required => true
 	end
@@ -36,6 +39,7 @@ module Telemetry
 	class Gauge < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :value, :required => true
 		property :value_color
 		property :max
@@ -49,6 +53,7 @@ module Telemetry
 	class Graph < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :renderer
 		property :series, :default => []
 		property :min_scale
@@ -59,6 +64,7 @@ module Telemetry
 	# Icons
 	class Icon < Hashie::Dash
 		include TelemetryFlows
+		property :title
 		property :tag, :required => true
 		property :icons, :default => []
 	end
@@ -66,6 +72,7 @@ module Telemetry
 	# iFrame
 	class Iframe < Hashie::Dash
 		include TelemetryFlows
+		property :title
 		property :tag, :required => true
 		property :url, :required => true
 	end
@@ -73,6 +80,7 @@ module Telemetry
 	# Log
 	class Log < Hashie::Dash
 		include TelemetryFlows
+		property :title
 		property :tag, :required => true
 		property :messages, :default => []
 	end
@@ -80,6 +88,7 @@ module Telemetry
 	# Map
 	class Map < Hashie::Dash
 		include TelemetryFlows
+		property :title
 		property :tag, :required => true
 		property :map_type, :required => true
 		property :points, :default => []
@@ -89,6 +98,7 @@ module Telemetry
 	class Multigauge < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :gauges, :default => []
 	end
 
@@ -96,6 +106,7 @@ module Telemetry
 	class Multivalue < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :values, :default => []
 	end
 
@@ -103,6 +114,7 @@ module Telemetry
 	class Servers < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :servers, :default => []
 		property :orange
 		property :red
@@ -112,6 +124,7 @@ module Telemetry
 	class Status < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :statuses, :default => []
 	end
 
@@ -119,6 +132,7 @@ module Telemetry
 	class Table < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :table, :default => []
 		property :headers, :default => []
 		property :colors, :default => []
@@ -128,6 +142,7 @@ module Telemetry
 	class Text < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :text, :required => true
 		property :alignment
 	end
@@ -136,6 +151,7 @@ module Telemetry
 	class Tickertape < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :messages, :default => []
 	end
 
@@ -143,6 +159,7 @@ module Telemetry
 	class Timechart < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :values, :default => []
 		property :type, :required => true
 	end
@@ -151,6 +168,7 @@ module Telemetry
 	class Timeline < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :messages, :default => []
 	end
 
@@ -158,6 +176,7 @@ module Telemetry
 	class Timeseries < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :value, :required => true
 		property :type, :required => true
 		property :label, :required => true
@@ -170,6 +189,7 @@ module Telemetry
 	class Upstatus < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :up, :default => []
 		property :down, :default => []
 		property :uptime
@@ -180,6 +200,7 @@ module Telemetry
 	class Value < Hashie::Dash
 		include TelemetryFlows
 		property :tag, :required => true
+		property :title
 		property :value, :required => true
 		property :color
 		property :delta
