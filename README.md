@@ -10,7 +10,7 @@ Install on your system:
 
 ## Basic Usage
 
-To use this gem you must require it in your file and specify your API Token that you can find on the [Telemetry API Token page](https://admin.telemetryapp.com/account/api_token)
+To use this gem you must require it in your file and specify your API Token that you can find on the [Telemetry API Token page](https://www.telemetryapp.com/account/api_token)
 
 Set a hash of values for the flow to update.  Each hash must contain the tag of the flow that you want to update.  
 
@@ -24,7 +24,7 @@ Set a hash of values for the flow to update.  Each hash must contain the tag of 
 	}
 	Telemetry::Value.new(properties).emit
 
-For documentation on flows and the properties they support please see the [flow documentation](https://admin.telemetryapp.com/documentation/flows) pages.
+For documentation on flows and the properties they support please see the [flow documentation](https://www.telemetryapp.com/documentation/flows) pages.
 
 
 ## Daemon
