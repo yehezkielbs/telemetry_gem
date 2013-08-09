@@ -14,7 +14,7 @@ module Telemetry
 
 	def self.api_host
 		if ENV["RACK_ENV"] == 'development' || ENV["RACK_ENV"] == 'test'
-			"http://data.test.telemetryapp.com"
+			"https://data.telemetryapp.com"
 		else
 			"https://data.telemetryapp.com"
 		end
