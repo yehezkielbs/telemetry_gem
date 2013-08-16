@@ -26,6 +26,25 @@ Set a hash of values for the flow to update.  Each hash must contain the tag of 
 
 For documentation on flows and the properties they support please see the [flow documentation](https://admin.telemetryapp.com/documentation/flows) pages.
 
+## Affiliates
+
+This gem supports affiliate data sending.  In order to use this capability call the Telemetry::Api.affiliate_send(flows, unique-identifier) method. You must have an enterprise account and get support to enable your account for affiliates first.
+
+	require 'telemetry'
+
+	Telemetry.token = "test-api-token"
+
+	# Construct a hash with the flow tags as keys and the values as the hash to use to update the data
+	flows = {
+		value_tag: {
+			value: 435
+		}
+	}
+
+	# Send to the unique identifier for the affiliate as created by you on the affiliate page
+	Telemetry::Api.affiliate_send(flows, "unique-identifier")
+
+For more information see the [affiliate documentation](https://admin.telemetryapp.com/documentation/affiliate).
 
 ## Daemon
 

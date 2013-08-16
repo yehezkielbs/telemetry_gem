@@ -8,7 +8,6 @@ require 'logger'
 
 module Telemetry
 
-	@affiliate_id
 	@token = nil
 	@logger = nil
 
@@ -44,14 +43,6 @@ module Telemetry
 		@token = token
 	end
 
-	def self.affiliate_id
-		@token
-	end
-
-	def self.affiliate_id=(affiliate_id)
-		@affiliate_id = affiliate_id
-	end
-
 	class Api
 		
 		def self.get_flow(id)
@@ -64,6 +55,13 @@ module Telemetry
 
 		def self.delete_flow_data(id)
 			Telemetry::Api.send(:delete, "/flows/#{id}/data")
+		end
+
+		def self.affiliate_send(affiliate_identifier, data)
+			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
+			raise RuntimeError, "Must supply data to send" unless data
+			raise RuntimeError, "Must supply a unique affiliate identifier" unless affiliate_identifier
+			return Telemetry::Api.send(:post, "/flows/affiliate/#{affiliate_identifier}", {:data => data})
 		end
 
 		def self.flow_update(flow)
