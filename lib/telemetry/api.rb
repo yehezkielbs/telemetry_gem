@@ -10,13 +10,25 @@ module Telemetry
 
 	@token = nil
 	@logger = nil
+	@api_host
+
+	def self.api_host=(api_host)
+		@api_host = api_host
+	end
 
 	def self.api_host
-		if ENV["RACK_ENV"] == 'development' || ENV["RACK_ENV"] == 'test'
-			"https://data.telemetryapp.com"
-		else
-			"https://data.telemetryapp.com"
+		unless @api_host
+			if ENV["RACK_ENV"] == 'development'
+				@api_host = "https://data.telemetryapp.com"				
+			elsif ENV["RACK_ENV"] == 'test'
+				@api_host = "https://data.telemetryapp.com"
+			elsif ENV["RACK_ENV"] == 'qa'
+				@api_host = "https://qa-data.telemetryapp.com"
+			else
+				@api_host = "https://data.telemetryapp.com"
+			end
 		end
+		@api_host
 	end
 
 	def self.logger=(logger)
