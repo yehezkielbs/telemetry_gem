@@ -18,6 +18,11 @@ module TelemetryDaemon
 		@@interval = interval
 	end
 
+  @@flows_expire_in = nil
+	def flows_expire_in(i)
+		@@flows_expire_in = i
+	end
+
 	# Ensure a minimum of 1 second between loops
 	def wait_for_interval_from(timestamp)
 		@@interval ||= 60
@@ -34,9 +39,9 @@ module TelemetryDaemon
  		x.each {|k,v| @@h[k.to_sym] = v}
  	end
 
-  	# Code blocks users can call at the beginning and end of each interval
-  	@@begin_interval = nil
-  	@@end_interval = nil
+  # Code blocks users can call at the beginning and end of each interval
+  @@begin_interval = nil
+  @@end_interval = nil
 
  	def begin_interval(&block)
  		@@begin_interval = block
@@ -177,16 +182,16 @@ module TelemetryDaemon
 				Telemetry::logger.debug "Task #{task[0]} #{task[1]} (every #{task[2]}s)"
 				#Telemetry::logger.debug "Update frequency is #{frequency} now #{Time.now.to_i} next #{@@next_run_at[tag]}"
 				if @@next_run_at[tag] && @@next_run_at[tag] > now.to_i
-					puts "  - Not scheduled yet (waiting #{-(now.to_i - @@next_run_at[tag])}s)"
+					Telemetry::logger.debug "  - Not scheduled yet (waiting #{-(now.to_i - @@next_run_at[tag])}s)"
 					next
 				end
 				@@next_run_at[tag] = now.to_i + frequency
 
 				Telemetry::logger.debug "  - Running intermittant task at #{now}"
 
-		        # If an offset is defined then align runtimes to the offset
-		        # How close you can get to the desired offset depends on the global interval. So set it relatively small
-		        # when using this feature
+		    # If an offset is defined then align runtimes to the offset
+		    # How close you can get to the desired offset depends on the global interval. So set it relatively small
+		    # when using this feature
 				if offset and offset >= 0 and offset <= 86400
 					this_morning = Time.new(now.year, now.month, now.day).to_i
 					time_since_offset = now.to_i - this_morning - offset
@@ -198,6 +203,10 @@ module TelemetryDaemon
 			else
 				Telemetry::logger.debug "  - Task #{task[0]} #{task[1]}"
 			end
+
+      
+      # Use global default to set expires_at field
+      set expires_at: Time.now.to_i + @@flows_expire_in if @@flows_expire_in
 
 			# Execute the flow
 			Telemetry.logger.debug "  + Executing task #{task[0]} #{task[1]}"
