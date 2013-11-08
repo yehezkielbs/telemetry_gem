@@ -50,13 +50,14 @@ For more information see the [affiliate documentation](https://admin.telemetryap
 
 Telemetry also supports a daemon mode where a binary (telemetryd) runs indefintely and loops through a configuration file triggering updates to the API as it goes.
 
-Create a config file on your disk (by default /etc/telemetryd_config.rb).  This file may have ruby code in it,  you may include your own gems, etc.  The file supports two configuration directives "interval" and "api_token".  The interval is how frequently each flow block is executed with the results sent to the server.  Please note if the result from a block is unchanged from the previous execution then it will be sent to the server only once per day. 
+Create a config file on your disk (by default /etc/telemetryd_config.rb).  This file may have ruby code in it,  you may include your own gems, etc.  The file supports three configuration directives "interval", "api_token" and "flows_expire_in".  The interval is how frequently each flow block is executed with the results sent to the server.  The flows_expire_in sets the expiry timout of the flows. If they do not get fresh data before that period of time the board will display and expired logo on their widgets. Please note if the result from a block is unchanged from the previous execution then it will be sent to the server only once per day when flows_expire_in is not set. 
 
 For more details please see our website.
 
 Example simple config:
 
-	interval 5
+	interval 5            
+	flows_expire_in 300
 	api_token "test-api-token"
 
 	gauge "test-flow-gauge" do

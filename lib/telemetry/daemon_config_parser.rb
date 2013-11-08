@@ -204,18 +204,19 @@ module TelemetryDaemon
 				Telemetry::logger.debug "  - Task #{task[0]} #{task[1]}"
 			end
 
-      
-      # Use global default to set expires_at field
-      set expires_at: Time.now.to_i + @@flows_expire_in if @@flows_expire_in
-
 			# Execute the flow
 			Telemetry.logger.debug "  + Executing task #{task[0]} #{task[1]}"
 			block.yield
 
-			if @hh == {}
+			if @@h == {}
 				Telemetry.logger.debug "  - Skipping empty task values #{task[0]} #{task[1]}"
 				next
 			end
+
+      # Use global default to set expires_at field if necessary
+			if @@flows_expire_in and not @@h[:expires_at]
+        set expires_at: Time.now.to_i + @@flows_expire_in
+      end
 
 			# Append the variant
 			values = @@h.merge({variant: variant})
