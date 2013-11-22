@@ -46,12 +46,12 @@ describe "Flows" do
   	Telemetry::Graph.new(properties).emit
   end
 
-  it "should update a Icons" do
+  it "should update a Icon" do
   	properties = {
-  		tag: "test-flow-icons",
+  		tag: "test-flow-icon",
   		icons: [{type: "icon-dashboard", label: "Alert", color: "red"}]
   	}
-  	Telemetry::Icons.new(properties).emit
+  	Telemetry::Icon.new(properties).emit
   end
 
   it "should update a Iframe" do

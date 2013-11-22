@@ -1,10 +1,23 @@
 #/usr/bin/env ruby
 
 require 'hashie'
+require 'gibberish'
+require 'multi_json'
+require 'oj'
 
 module TelemetryFlows
 	def emit
 		Telemetry::Api.flow_update(self)
+	end
+	def encrypt(encrytion_key)
+		cipher = Gibberish::AES.new(encrytion_key)
+		skipped_keys = ["tag", "expires_at", "priority", "icon"]
+		self.keys.each do |key|
+			unless skipped_keys.include?(key)
+				self[key] = {enc_json: cipher.enc(MultiJson.dump(self[key]))}
+			end
+		end
+		puts self.to_hash
 	end
 end
 
@@ -77,7 +90,7 @@ module Telemetry
 		property :x_labels
 	end
 
-	# Icons
+	# Icon
 	class Icon < Hashie::Dash
 		include TelemetryFlows
 		property :title

@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "dante"
   gem.add_dependency "hashie"
   gem.add_dependency "net-http-persistent"
+  gem.add_dependency "gibberish"
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "rake"
 end
