@@ -76,12 +76,12 @@ module TelemetryDaemon
 
 	def custom(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, offset, block ]
+		@@tasks << [ :custom, tag, frequency, offset, block ]
 	end
 
 	def funnelchart(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, offset, block ]
+		@@tasks << [ :funnelchart, tag, frequency, offset, block ]
 	end
 
 	def gauge(tag, frequency = 0, offset=nil, &block)
@@ -96,12 +96,12 @@ module TelemetryDaemon
 
 	def grid(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, offset, block ]
+		@@tasks << [ :gid, tag, frequency, offset, block ]
 	end
 
 	def histogram(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, offset, block ]
+		@@tasks << [ :histogram, tag, frequency, offset, block ]
 	end
 
 	def icon(tag, frequency = 0, offset=nil, &block)
@@ -111,7 +111,7 @@ module TelemetryDaemon
 
 	def image(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, offset, block ]
+		@@tasks << [ :image, tag, frequency, offset, block ]
 	end
 
 	def iframe(tag, frequency = 0, offset=nil, &block)
@@ -141,12 +141,12 @@ module TelemetryDaemon
 
 	def piechart(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, offset, block ]
+		@@tasks << [ :piechart, tag, frequency, offset, block ]
 	end
 
 	def scatterplot(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, offset, block ]
+		@@tasks << [ :scatterplot, tag, frequency, offset, block ]
 	end
 
 	def servers(tag, frequency = 0, offset=nil, &block)
@@ -201,7 +201,7 @@ module TelemetryDaemon
 
 	def waterfall(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, offset, block ]
+		@@tasks << [ :waterfall, tag, frequency, offset, block ]
 	end
 
 	def run_scheduled_flow_updates
