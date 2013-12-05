@@ -74,6 +74,16 @@ module TelemetryDaemon
 		@@tasks << [ :countdown, tag, frequency, offset, block ]
 	end
 
+	def custom(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :countdown, tag, frequency, offset, block ]
+	end
+
+	def funnelchart(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :countdown, tag, frequency, offset, block ]
+	end
+
 	def gauge(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
 		@@tasks << [ :gauge, tag, frequency, offset, block ]
@@ -84,9 +94,24 @@ module TelemetryDaemon
 		@@tasks << [ :graph, tag, frequency, offset, block ]
 	end
 
+	def grid(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :countdown, tag, frequency, offset, block ]
+	end
+
+	def histogram(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :countdown, tag, frequency, offset, block ]
+	end
+
 	def icon(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
 		@@tasks << [ :icon, tag, frequency, offset, block ]
+	end
+
+	def image(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :countdown, tag, frequency, offset, block ]
 	end
 
 	def iframe(tag, frequency = 0, offset=nil, &block)
@@ -112,6 +137,16 @@ module TelemetryDaemon
 	def multivalue(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
 		@@tasks << [ :multivalue, tag, frequency, offset, block ]
+	end
+
+	def piechart(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :countdown, tag, frequency, offset, block ]
+	end
+
+	def scatterplot(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :countdown, tag, frequency, offset, block ]
 	end
 
 	def servers(tag, frequency = 0, offset=nil, &block)
@@ -162,6 +197,11 @@ module TelemetryDaemon
 	def value(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
 		@@tasks << [ :value, tag, frequency, offset, block ]
+	end
+
+	def waterfall(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :countdown, tag, frequency, offset, block ]
 	end
 
 	def run_scheduled_flow_updates

@@ -31,6 +31,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
   	property :bars, :default => []
 	end
 
@@ -42,6 +43,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
   	property :bulletcharts, :default => []
 	end
 
@@ -53,8 +55,33 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :time, :required => true
 		property :message, :required => true
+	end
+
+	# Custom
+	class Custom < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
+		property :title
+		property :expires_at
+		property :priority
+		property :icon
+		property :link
+		property :data, :required => true
+	end
+
+	# Funnel Chart
+	class Funnelchart < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
+		property :title
+		property :expires_at
+		property :priority
+		property :icon
+		property :link
+		property :values, :required => true
 	end
 
 	# Gauge
@@ -65,6 +92,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :value, :required => true
 		property :value_color
 		property :max
@@ -83,11 +111,44 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :renderer
 		property :series, :default => []
 		property :min_scale
 		property :unstack
 		property :x_labels
+		property :label
+		property :label_2
+		property :label_3
+	end
+
+	# Grid
+	class Grid < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
+		property :title
+		property :expires_at
+		property :priority
+		property :icon
+		property :link
+		property :data, :required => true
+	end
+
+	# Histogram
+	class Histogram < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
+		property :title
+		property :expires_at
+		property :priority
+		property :icon
+		property :link
+		property :values, :required => true
+		property :colors
+		property :widths
+		property :y_label
+		property :x_label
+		property :cumulative
 	end
 
 	# Icon
@@ -97,8 +158,22 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :tag, :required => true
 		property :icons, :default => []
+	end
+
+	# Image
+	class Image < Hashie::Dash
+		include TelemetryFlows
+		property :title
+		property :expires_at
+		property :priority
+		property :icon
+		property :link
+		property :mode
+		property :tag, :required => true
+		property :url, :required => true
 	end
 
 	# iFrame
@@ -108,6 +183,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :tag, :required => true
 		property :url, :required => true
 	end
@@ -119,6 +195,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :tag, :required => true
 		property :messages, :default => []
 	end
@@ -130,6 +207,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :tag, :required => true
 		property :map_type, :required => true
 		property :points, :default => []
@@ -142,6 +220,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :title
 		property :gauges, :default => []
 	end
@@ -153,9 +232,41 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :title
 		property :values, :default => []
 	end
+
+	# Piechart
+	class Piechart < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
+		property :title
+		property :expires_at
+		property :priority
+		property :icon
+		property :link
+		property :values, :required => true
+		property :labels
+		property :colors
+		property :renderer
+	end
+
+	# Scatterplot
+	class Scatterplot < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
+		property :title
+		property :expires_at
+		property :priority
+		property :icon
+		property :link
+		property :values, :required => true
+		property :colors
+		property :x_label
+		property :y_label
+	end
+
 
 	# Servers
 	class Servers < Hashie::Dash
@@ -165,6 +276,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :servers, :default => []
 		property :orange
 		property :red
@@ -178,6 +290,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :statuses, :default => []
 	end
 
@@ -189,6 +302,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :table, :default => []
 		property :headers, :default => []
 		property :colors, :default => []
@@ -202,6 +316,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :text, :required => true
 		property :alignment
 	end
@@ -214,6 +329,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :messages, :default => []
 	end
 
@@ -225,6 +341,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :values, :default => []
 		property :type, :required => true
 	end
@@ -237,6 +354,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :messages, :default => []
 	end
 
@@ -248,6 +366,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :value, :required => true
 		property :type, :required => true
 		property :label, :required => true
@@ -264,6 +383,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :up, :default => []
 		property :down, :default => []
 		property :uptime
@@ -278,6 +398,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :link
 		property :value, :required => true
 		property :color
 		property :delta
@@ -286,4 +407,20 @@ module Telemetry
 		property :sparkline
 		property :label
 	end
+
+	# Waterfall
+	class Waterfall < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
+		property :title
+		property :expires_at
+		property :priority
+		property :icon
+		property :link
+		property :serial, :required => true
+		property :values, :required => true
+		property :value_type
+		property :spread
+	end
+
 end
