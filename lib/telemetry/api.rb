@@ -19,13 +19,13 @@ module Telemetry
 	def self.api_host
 		unless @api_host
 			if ENV["RACK_ENV"] == 'development'
-				@api_host = "https://data.telemetryapp.com"				
+				@api_host = "https://api.telemetryapp.com"				
 			elsif ENV["RACK_ENV"] == 'test'
-				@api_host = "https://data.telemetryapp.com"
+				@api_host = "https://api.telemetryapp.com"
 			elsif ENV["RACK_ENV"] == 'qa'
-				@api_host = "https://qa-data.telemetryapp.com"
+				@api_host = "https://qa-api.telemetryapp.com"
 			else
-				@api_host = "https://data.telemetryapp.com"
+				@api_host = "https://api.telemetryapp.com"
 			end
 		end
 		@api_host
@@ -56,7 +56,23 @@ module Telemetry
 	end
 
 	class Api
-		
+
+		def self.get(path)
+			Telemetry::Api.send(:get, path)
+		end
+
+		def self.post(path, body)
+			Telemetry::Api.send(:post, path, body)
+		end
+
+		def self.patch(path, body)
+			Telemetry::Api.send(:patch, path, body)
+		end
+
+		def self.delete(path)
+			Telemetry::Api.send(:delete, path)
+		end
+
 		def self.get_flow(id)
 			Telemetry::Api.send(:get, "/flows/#{id}")
 		end
@@ -73,14 +89,14 @@ module Telemetry
 			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
 			raise RuntimeError, "Must supply data to send" unless data
 			raise RuntimeError, "Must supply a unique affiliate identifier" unless affiliate_identifier
-			return Telemetry::Api.send(:post, "/flows/affiliate/#{affiliate_identifier}", {:data => data})
+			return Telemetry::Api.send(:post, "/affiliates/#{affiliate_identifier}/data", {:data => data})
 		end
 
 		def self.flow_update(flow)
 			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
 			values = flow.to_hash
 			tag = values.delete('tag')
-			result = Telemetry::Api.send(:put, "/flows/#{tag}", values)
+			result = Telemetry::Api.send(:put, "/flows/#{tag}/data", values)
 			raise ResponseError, "API Response: #{result['errors'].join(', ')}" unless result["updated"].include?(tag)
 			result
 		end
@@ -94,7 +110,7 @@ module Telemetry
 				tag = values.delete('tag')
 				data[tag] = values
 			end
-			return Telemetry::Api.send(:post, "/flows", {:data => data})
+			return Telemetry::Api.send(:post, "/data", {:data => data})
 		end
 
 		def self.send(method, endpoint, data = nil)
@@ -109,6 +125,9 @@ module Telemetry
 				request.body = MultiJson.dump(data) 
 			elsif method == :put
 				request = Net::HTTP::Put.new(uri.path)
+				request.body = MultiJson.dump(data) 
+			elsif method == :patch
+				request = Net::HTTP::Patch.new(uri.path)
 				request.body = MultiJson.dump(data) 
 			elsif method == :get 
 				request = Net::HTTP::Get.new(uri.path)
@@ -169,16 +188,16 @@ module Telemetry
 					Telemetry::logger.error error
 					raise Telemetry::RateLimited, error
 				when "500"
-					error = "#{Time.now} (HTTP 500): Data API server error. #{method.upcase} #{uri}"
+					error = "#{Time.now} (HTTP 500): API server error. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					Telemetry::logger.error response.body
 					raise Telemetry::ServerException, error
 				when "502"
-					error = "#{Time.now} (HTTP 502): Data API server is down. #{method.upcase} #{uri}"
+					error = "#{Time.now} (HTTP 502): API server is down. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					raise Telemetry::Unavailable, error
 				when "503"
-					error = "#{Time.now} (HTTP 503): Data API server is down. #{method.upcase} #{uri}"
+					error = "#{Time.now} (HTTP 503): API server is down. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					raise Telemetry::Unavailable, error
 				else

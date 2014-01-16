@@ -2,6 +2,10 @@
 
 module TelemetryDaemon
 
+	def api_host(api_host)
+		Telemetry.api_host = api_host
+	end
+
 	def api_token(token)
 		Telemetry.token = token
 	end

@@ -8,7 +8,27 @@ Install on your system:
 
     $ gem install telemetry
 
+
 ## Basic Usage
+
+This gem allows you to interact with the API using simple POST, GET, PATCH, PUT, DELETE. You should use the following methods:
+
+- Telemetry::Api.delete(path) 
+- Telemetry::Api.get(path)
+- Telemetry::Api.patch(path, body)
+- Telemetry::Api.post(path, body)
+- Telemetry::Api.put(path, body)
+
+Where __path__ is the path for the resource (for instance "/boards/:board_id") and __body__ is a hash of the body to send to the server.  You do not need to JSON encode the body, it will be converted to JSON for you.
+
+	require 'telemetry'
+
+	Telemetry.token = $YOUR_API_TOKEN
+
+	@board = Telemetry::Api.get("/boards/#{@board_id}")
+
+
+## Sending Data To Flows
 
 To use this gem you must require it in your file and specify your API Token that you can find on the [Telemetry API Token page](https://www.telemetryapp.com/account/api_token)
 
@@ -26,7 +46,7 @@ Set a hash of values for the flow to update.  Each hash must contain the tag of 
 
 For documentation on flows and the properties they support please see the [flow documentation](https://www.telemetryapp.com/documentation/flows) pages.
 
-## Encryption
+## Data Encryption
 
 While Telemetry is SSL based and we protect our customers data with utmost caution, some corporate policies will not approve of any third party having the possibility of access to their data.  Therefore we support optional encryption of the data with AES-256-CBC before sending it to the Telemetry API.   The Telemetry Javascript application that runs in your browser to view the data can be configured with the same key in order to decrypt the data and display it for you while making it invisible to any prying eyes in the middle.  
 

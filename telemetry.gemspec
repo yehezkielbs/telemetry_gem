@@ -17,12 +17,12 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
   gem.required_ruby_version = '>= 1.9.2'
-  gem.add_dependency "oj"
-  gem.add_dependency "multi_json"
-  gem.add_dependency "dante"
-  gem.add_dependency "hashie"
-  gem.add_dependency "net-http-persistent"
-  gem.add_dependency "gibberish"
-  gem.add_development_dependency "rspec"
-  gem.add_development_dependency "rake"
+  gem.add_dependency "oj", "~> 2.5"
+  gem.add_dependency "multi_json", "~> 1.8"
+  gem.add_dependency "dante", "~> 0.2"
+  gem.add_dependency "hashie", "~> 2.0"
+  gem.add_dependency "net-http-persistent", "~> 2.9"
+  gem.add_dependency "gibberish", "~> 1.3"
+  gem.add_development_dependency "rspec", "~> 2.14"
+  gem.add_development_dependency "rake", "~> 10.1"
 end
