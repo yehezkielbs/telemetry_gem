@@ -54,7 +54,7 @@ Note that the # part will not be sent to the server, it's a local argument only 
 
 ## Affiliates
 
-This gem supports affiliate data sending.  In order to use this capability call the Telemetry::Api.affiliate_send(flows, unique-identifier) method. You must have an enterprise account and get support to enable your account for affiliates first.
+This gem supports affiliate data sending.  In order to use this capability call the Telemetry::Api.affiliate_send(unique-identifier, flows) method. You must have an enterprise account and get support to enable your account for affiliates first.
 
 	require 'telemetry'
 
@@ -68,7 +68,7 @@ This gem supports affiliate data sending.  In order to use this capability call 
 	}
 
 	# Send to the unique identifier for the affiliate as created by you on the affiliate page
-	Telemetry::Api.affiliate_send(flows, "unique-identifier")
+	Telemetry::Api.affiliate_send("unique-identifier", flows)
 
 For more information see the [affiliate documentation](https://admin.telemetryapp.com/documentation/affiliate).
 
