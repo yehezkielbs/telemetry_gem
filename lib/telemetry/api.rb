@@ -155,6 +155,11 @@ module Telemetry
 				when "200"
 					Telemetry::logger.debug response.body
 					return MultiJson.load(response.body)
+				when "201"
+					Telemetry::logger.debug response.body
+					return MultiJson.load(response.body)
+				when "204"
+					return "No Body"
 				when "400"
 					json = MultiJson.load(response.body)
 					error = "#{Time.now} (HTTP 400): #{json['code'] if json} #{json['message'] if json}"
