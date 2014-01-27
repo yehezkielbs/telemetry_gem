@@ -42,7 +42,7 @@ runner.execute do |opts|
 		begin
 			unless output == {}
 				Telemetry::logger.debug "Beginning run"
-				Telemetry::Api.send(:post, "/flows", {:data => output}) 
+				Telemetry::Api.send(:post, "/data", {:data => output}) 
 			end
 
 		rescue Telemetry::RateLimited
