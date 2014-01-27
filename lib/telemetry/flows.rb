@@ -120,6 +120,10 @@ module Telemetry
 		property :label
 		property :label_2
 		property :label_3
+    property :start_time
+    property :end_time
+    property :baseline
+    property :value_type
 	end
 
 	# Grid
