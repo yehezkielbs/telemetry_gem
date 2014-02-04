@@ -162,7 +162,7 @@ module Telemetry
 					return "No Body"
 				when "400"
 					json = MultiJson.load(response.body)
-					error = "#{Time.now} (HTTP 400): #{json['code'] if json} #{json['message'] if json}"
+					error = "#{Time.now} (HTTP 400) #{json['errors'].join(',') if json && json['errors']}"
 					Telemetry::logger.debug response.body
 					Telemetry::logger.error error
 					raise Telemetry::FormatError, error
