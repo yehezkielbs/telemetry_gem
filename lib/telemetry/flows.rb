@@ -225,6 +225,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :gauge_color
 		property :link
 		property :title
 		property :gauges, :default => []
