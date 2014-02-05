@@ -96,6 +96,7 @@ module Telemetry
 		property :value, :required => true
 		property :value_color
 		property :max
+		property :gauge_color
 		property :range
 		property :value_2
 		property :value_2_color
@@ -266,7 +267,7 @@ module Telemetry
 		property :icon
 		property :link
 		property :values, :required => true
-		property :colors
+		property :color
 		property :x_label
 		property :y_label
 	end
@@ -373,8 +374,9 @@ module Telemetry
 		property :link
 		property :value, :required => true
 		property :type, :required => true
-		property :label, :required => true
+		property :label
 		property :color
+		property :values
 		property :smoothing
 		property :value_type
 	end
