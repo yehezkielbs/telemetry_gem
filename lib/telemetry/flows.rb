@@ -376,6 +376,7 @@ module Telemetry
 		property :value, :required => true
 		property :type, :required => true
 		property :label
+		property :labels
 		property :color
 		property :values
 		property :smoothing
