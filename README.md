@@ -24,11 +24,9 @@ Where __path__ is the path for the resource (for instance "/boards/:board_id") a
 	require 'telemetry'
 
 	Telemetry.token = $YOUR_API_TOKEN
-
 	@board = Telemetry::Api.get("/boards/#{@board_id}")
 
-
-## Sending Data To Flows
+## Sending Data To a Flow
 
 To use this gem you must require it in your file and specify your API Token that you can find on the [Telemetry API Token page](https://www.telemetryapp.com/account/api_token)
 
@@ -37,14 +35,47 @@ Set a hash of values for the flow to update.  Each hash must contain the tag of 
 	require 'telemetry'
 
 	Telemetry.token = "test-api-token"
+	Telemetry::Value.new(tag: "test-flow-value", value: 3434).emit
 
-	properties = {
-		tag: "test-flow-value",
-		value: 3434
-	}
-	Telemetry::Value.new(properties).emit
+Supported flow object variants are as follows:
 
-For documentation on flows and the properties they support please see the [flow documentation](https://www.telemetryapp.com/documentation/flows) pages.
+- Telemetry::Barchart
+- Telemetry::Bulletchart
+- Telemetry::Countdown
+- Telemetry::Gauge
+- Telemetry::Graph
+- Telemetry::Grid
+- Telemetry::Icon
+- Telemetry::Image
+- Telemetry::Log
+- Telemetry::Multigauge
+- Telemetry::Multivalue
+- Telemetry::Piechart
+- Telemetry::Scatterplot
+- Telemetry::Servers
+- Telemetry::Status
+- Telemetry::Table
+- Telemetry::Text
+- Telemetry::Tickertape
+- Telemetry::Timechart
+- Telemetry::Timeline
+- Telemetry::Upstatus
+- Telemetry::Value
+- Telemetry::Waterfall
+
+For documentation on the different properties for the various data elements please see the [data documentation](https://www.telemetryapp.com/user/documentation/data) pages.
+
+## Batch Updating Multiple Flows at Once
+
+You may send data to more than one flow at a time.  To do this construct an array of flows and use the Telemetry::Api.flow_update_batch(flows) method. A code example follows:
+
+	require 'telemetry'
+
+	Telemetry.token = "test-api-token"
+	flows = []
+	flows << Telemetry::Value.new({tag: "test-flow-value", value: 3432})
+	flows << Telemetry::Gauge.new({tag: "test-flow-gauge", value: 33})
+	Telemetry::Api.flow_update_batch(flows)
 
 ## Data Encryption
 
@@ -54,14 +85,9 @@ While Telemetry is SSL based and we protect our customers data with utmost cauti
 
 	Telemetry.token = "test-api-token"
 	ENCRYPTIONKEY = "Unique Random Password"
-
-	properties = {
-		tag: "test-flow-value",
-		value: 3434
-	}
-	value = Telemetry::Value.new(properties)
-	value.encrypt(ENCRYPTIONKEY)  
-	value.emit
+	flow = Telemetry::Value.new(tag: "test-flow-value", value: 3434)
+	flow.encrypt(ENCRYPTIONKEY)  
+	flow.emit
 
 Please be careful that your data isn't able to be validated by the Telemetry API since it cannot see it.  Therefore we suggest testing with dummy uncrypted data first.  Additionally there will be performance implications for large amounts of changing data for some browsers. 
 
@@ -71,26 +97,39 @@ In order to view encrypted data in your browser you will need to append the key 
 
 Note that the # part will not be sent to the server, it's a local argument only visible to the local javascript running in the browser.  Certain attributes like tags and priority will not be encrypted as they're needed by the system. 
 
+## Virtual Channels
 
-## Affiliates
+This gem supports virtual channel sending.  You must have a pro or higher account to use virtual channels.  In order to use this you must call:
 
-This gem supports affiliate data sending.  In order to use this capability call the Telemetry::Api.affiliate_send(unique-identifier, flows) method. You must have an enterprise account and get support to enable your account for affiliates first.
+-	Telemetry::Api.channel_send(unique-identifier, flow)
+-	Telemetry::Api.channel_send_batch(unique-identifier, flows) 
+
+An example of code to do this would be:
 
 	require 'telemetry'
 
 	Telemetry.token = "test-api-token"
+	flow = Telemetry::Value.new(tag: "test-flow-value", value: 3434)
+	Telemetry::Api.channel_send("channel-tag", flow)
 
-	# Construct a hash with the flow tags as keys and the values as the hash to use to update the data
-	flows = {
-		value_tag: {
-			value: 435
-		}
-	}
+For more information see the [virtual channel documentation](https://www.telemetryapp.com/user/documentation/virtual_channels).
 
-	# Send to the unique identifier for the affiliate as created by you on the affiliate page
-	Telemetry::Api.affiliate_send("unique-identifier", flows)
+## Affiliates
 
-For more information see the [affiliate documentation](https://admin.telemetryapp.com/documentation/affiliate).
+This gem supports affiliate data sending. You must have an enterprise account and get support to enable your account for affiliates first. In order to use this capability call either:
+
+-	Telemetry::Api.affiliate_send(affiliate-identifier, flow)
+-	Telemetry::Api.affiliate_send_batch(affiliate-identifier, flows) 
+
+An example of code to do this would be:
+
+	require 'telemetry'
+
+	Telemetry.token = "test-api-token"
+	flow = Telemetry::Value.new(tag: "test-flow-value", value: 3434)
+	Telemetry::Api.affiliate_send("affiliate-identifier", flow)
+
+For more information see the [affiliate documentation](https://admin.telemetryapp.com/documentation/affiliates).
 
 ## Daemon
 

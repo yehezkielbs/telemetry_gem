@@ -85,10 +85,47 @@ module Telemetry
 			Telemetry::Api.send(:delete, "/flows/#{id}/data")
 		end
 
-		def self.affiliate_send(affiliate_identifier, data)
+		def self.channel_send_batch(channel_tag, flows)
 			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
-			raise RuntimeError, "Must supply data to send" unless data
+			raise RuntimeError, "Must supply flows to send" unless flows
+			raise RuntimeError, "Must supply a channel_tag" unless channel_tag
+			data = {}
+			flows.each do |flow|
+				values = flow.to_hash
+				tag = values.delete('tag')
+				data[tag] = values
+			end
+			return Telemetry::Api.send(:post, "/channels/#{channel_tag}/data", {:data => data})
+		end
+
+		def self.channel_send(channel_tag, flow)
+			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
+			raise RuntimeError, "Must supply flow to send" unless flow
+			raise RuntimeError, "Must supply a channel_tag" unless affiliate_identifier
+			values = flow.to_hash
+			tag = values.delete('tag')
+			return Telemetry::Api.send(:put, "/channels/#{channel_tag}/flows/#{tag}/data", values)
+		end
+
+		def self.affiliate_send(affiliate_identifier, flow)
+			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
+			raise RuntimeError, "Must supply flow to send" unless flow
 			raise RuntimeError, "Must supply a unique affiliate identifier" unless affiliate_identifier
+			values = flow.to_hash
+			tag = values.delete('tag')
+			return Telemetry::Api.send(:post, "/affiliates/#{affiliate_identifier}/flows/#{tag}/data", values)
+		end
+
+		def self.affiliate_send_batch(affiliate_identifier, flows)
+			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
+			raise RuntimeError, "Must supply flows to send" unless flows
+			raise RuntimeError, "Must supply a unique affiliate identifier" unless affiliate_identifier
+			data = {}
+			flows.each do |flow|
+				values = flow.to_hash
+				tag = values.delete('tag')
+				data[tag] = values
+			end
 			return Telemetry::Api.send(:post, "/affiliates/#{affiliate_identifier}/data", {:data => data})
 		end
 

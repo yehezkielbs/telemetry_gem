@@ -310,6 +310,7 @@ module Telemetry
 		property :icon
 		property :link
 		property :table, :default => []
+		property :values, :default => []
 		property :headers, :default => []
 		property :colors, :default => []
 	end
