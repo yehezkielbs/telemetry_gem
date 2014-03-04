@@ -101,7 +101,7 @@ module Telemetry
 		def self.channel_send(channel_tag, flow)
 			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
 			raise RuntimeError, "Must supply flow to send" unless flow
-			raise RuntimeError, "Must supply a channel_tag" unless affiliate_identifier
+			raise RuntimeError, "Must supply a channel_tag" unless channel_tag
 			values = flow.to_hash
 			tag = values.delete('tag')
 			return Telemetry::Api.send(:put, "/channels/#{channel_tag}/flows/#{tag}/data", values)

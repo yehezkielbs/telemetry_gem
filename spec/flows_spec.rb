@@ -54,14 +54,6 @@ describe "Flows" do
   	Telemetry::Icon.new(properties).emit
   end
 
-  it "should update a Iframe" do
-  	properties = {
-  		tag: "test-flow-iframe",
-  		url: "http://www.telemetryapp.com"
-  	}
-  	Telemetry::Iframe.new(properties).emit
-  end
-
   it "should update a Log" do
   	properties = {
   		tag: "test-flow-log",
@@ -70,14 +62,6 @@ describe "Flows" do
   	Telemetry::Log.new(properties).emit
   end
 
-  it "should update a Map" do
-  	properties = {
-  		tag: "test-flow-map",
-  		map_type: "asia",
-  		points: [[34.344,129.344],[55.233,121.233]]
-  	}
-  	Telemetry::Map.new(properties).emit
-  end
 
   it "should update a Multigauge" do
   	properties = {
@@ -98,7 +82,7 @@ describe "Flows" do
   it "should update a Servers" do
   	properties = {
   		tag: "test-flow-servers",
-  		servers: [{values: [33,22,55], title: "Alpha"}]
+  		servers: [{values: [33,22,55], name: "Alpha"}]
   	}
   	Telemetry::Servers.new(properties).emit
   end
@@ -133,15 +117,6 @@ describe "Flows" do
   		messages: ["Hello World!"]
   	}
   	Telemetry::Tickertape.new(properties).emit
-  end
-
-  it "should update a Timechart" do
-  	properties = {
-  		tag: "test-flow-timechart",
-  		type: "week",
-  		values: [34,123,76,43,45,16,48]
-  	}
-  	Telemetry::Timechart.new(properties).emit
   end
 
   it "should update a Timeline" do
