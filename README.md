@@ -30,12 +30,13 @@ Where __path__ is the path for the resource (for instance "/boards/:board_id") a
 
 To use this gem you must require it in your file and specify your API Token that you can find on the [Telemetry API Token page](https://www.telemetryapp.com/account/api_token)
 
-Set a hash of values for the flow to update.  Each hash must contain the tag of the flow that you want to update.  
+Create a new flow object of the variant that you want to use. Use its emit method to send the data to Telemetry.  
 
 	require 'telemetry'
 
 	Telemetry.token = "test-api-token"
-	Telemetry::Value.new(tag: "test-flow-value", value: 3434).emit
+	gauge = Telemetry::Gauge.new(tag: "test-flow-gauge", value: 3434)
+	gauge.emit
 
 Supported flow object variants are as follows:
 
@@ -67,7 +68,7 @@ For documentation on the different properties for the various data elements plea
 
 ## Batch Updating Multiple Flows at Once
 
-You may send data to more than one flow at a time.  To do this construct an array of flows and use the Telemetry::Api.flow_update_batch(flows) method. A code example follows:
+You may send data to more than one flow in a single API call.  To do this construct an array of flows and use the Telemetry::Api.flow_update_batch(flows) method. A code example follows:
 
 	require 'telemetry'
 
