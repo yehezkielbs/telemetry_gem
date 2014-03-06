@@ -104,7 +104,7 @@ module Telemetry
 			raise RuntimeError, "Must supply a channel_tag" unless channel_tag
 			values = flow.to_hash
 			tag = values.delete('tag')
-			return Telemetry::Api.send(:put, "/channels/#{channel_tag}/flows/#{tag}/data", values)
+			return Telemetry::Api.send(:post, "/channels/#{channel_tag}/flows/#{tag}/data", values)
 		end
 
 		def self.affiliate_send(affiliate_identifier, flow)
