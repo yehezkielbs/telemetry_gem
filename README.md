@@ -130,7 +130,23 @@ An example of code to do this would be:
 	flow = Telemetry::Value.new(tag: "test-flow-value", value: 3434)
 	Telemetry::Api.affiliate_send("affiliate-identifier", flow)
 
-For more information see the [affiliate documentation](https://admin.telemetryapp.com/documentation/affiliates).
+For more information see the [affiliate documentation](https://admin.telemetryapp.com/user/documentation/affiliates).
+
+## Aggregations
+
+This gem supports the aggregations API interface.  Aggregations allow you to send data point by point and have Telemetry aggregate the data for you.  The gem supports the following methods:
+
+-	Telemetry::Api.aggregate(bucket, value)
+-	Telemetry::Api.aggregate_set_interval(bucket, interval, values) 
+
+An example of code to do this would be:
+
+	require 'telemetry'
+
+	Telemetry.token = "test-api-token"
+	Telemetry::Api.aggregate("my-bucket", 23124)
+
+For more infromation see the [aggregations documentation](https://admin.telemetryapp.com/user/documentation/aggregations)
 
 ## Daemon
 

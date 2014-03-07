@@ -85,6 +85,16 @@ module Telemetry
 			Telemetry::Api.send(:delete, "/flows/#{id}/data")
 		end
 
+		def self.aggregate(bucket, value)
+			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
+			return Telemetry::Api.send(:post, "/aggregations/#{bucket}", {:value => value})
+		end
+
+		def self.aggregate_set_interval(bucket, interval, values)
+			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
+			return Telemetry::Api.send(:put, "/aggregations/#{bucket}/interval/#{interval}", {:value => value})
+		end
+
 		def self.channel_send_batch(channel_tag, flows)
 			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
 			raise RuntimeError, "Must supply flows to send" unless flows
