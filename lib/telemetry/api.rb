@@ -31,6 +31,11 @@ module Telemetry
 		@api_host
 	end
 
+	def self.logfile=(logfile)
+		@logger = Logger.new(logfile)
+		@logger.level = Logger::INFO
+	end
+
 	def self.logger=(logger)
 		@logger = logger
 	end
@@ -41,9 +46,9 @@ module Telemetry
 			if ENV['RACK_ENV'] == 'development'
 				@logger.level = Logger::DEBUG
 			else
-				@logger.level = Logger::WARN
+				@logger.level = Logger::INFO
 			end
-		end
+		end 
 		@logger
 	end
 
@@ -200,11 +205,15 @@ module Telemetry
 
 				case response.code
 				when "200"
-					Telemetry::logger.debug response.body
-					return MultiJson.load(response.body)
+					rj = MultiJson.load(response.body)
+					Telemetry::logger.info "Updated: #{rj['updated'].join(', ')}" if rj && rj['updated'] && rj['updated'].count > 0
+					Telemetry::logger.info "Skipped: #{rj['skipped'].join(', ')}" if rj && rj['skipped'] && rj['skipped'].count > 0
+					return rj
 				when "201"
-					Telemetry::logger.debug response.body
-					return MultiJson.load(response.body)
+					rj = MultiJson.load(response.body)
+					Telemetry::logger.info "Updated: #{rj['updated'].join(', ')}" if rj && rj['updated'] && rj['updated'].count > 0
+					Telemetry::logger.info "Skipped: #{rj['skipped'].join(', ')}" if rj && rj['skipped'] && rj['skipped'].count > 0
+					return rj
 				when "204"
 					return "No Body"
 				when "400"

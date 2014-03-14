@@ -18,6 +18,9 @@ runner.with_options do |opts|
   opts.on("-o", "--once", "Run once") do |o|
     options[:once] = o
   end
+  opts.on("-l", "--logfile PATH", "Log to a logfile") do |l|
+    options[:logfile] = l
+  end
 end
 
 runner.execute do |opts|
@@ -32,6 +35,9 @@ runner.execute do |opts|
 		Telemetry::logger.error "Config file not found, please create /etc/telemetryd_config.rb or specify its location with -c"
 		exit
 	end
+
+	Telemetry::logfile = opts[:logfile] if opts[:logfile]
+	Telemetry::logger.info "Starting telemetryd"
 
 	# Loop Forever
 	loop do
@@ -50,12 +56,15 @@ runner.execute do |opts|
 			sleep 3600
 
 		rescue Telemetry::AuthenticationFailed => e
+			Telemetry::logger.error "Authentication Failed, Exiting"
 			raise e
 
 		rescue Telemetry::AuthorizationError => e
+			Telemetry::logger.error "Authorization Failed, Exiting"
 			raise e
 
 		rescue Telemetry::FormatError => e
+			Telemetry::logger.error "Format Error, Exiting"
 			raise e
 
 		rescue Exception => e
