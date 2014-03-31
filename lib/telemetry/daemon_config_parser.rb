@@ -211,8 +211,6 @@ module TelemetryDaemon
 	def run_scheduled_flow_updates
 		@@buffer = {}
 		@@tasks ||= {}
-		@@last_values ||= {}
-		@@values_expires_at ||= {}
 		@@next_run_at ||= {}
 
 		@@tasks.each do |task| 
@@ -269,14 +267,7 @@ module TelemetryDaemon
 
 			# Telemetry.logger.debug "LV\n\n #{@@last_values}\n\n"
 
-			# Skip if the values haven't changed (though send 1/day regardless)
-			if @@last_values[tag] != values || @@values_expires_at[tag] < now.to_i
-				@@buffer[tag] = values
-				@@last_values[tag] = values.clone # Save the value so we dont update unless it changes
-				@@values_expires_at[tag] = now.to_i + 86400  # Force an update 1/day
-			else
-				Telemetry.logger.debug "  - Skipping update for unchanged #{task[0]} #{task[1]}:\n#{@@last_values[tag]}"
-			end
+			@@buffer[tag] = values
 		end
 
 		@@buffer
