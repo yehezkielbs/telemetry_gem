@@ -18,7 +18,7 @@ runner.with_options do |opts|
   opts.on("-o", "--once", "Run once") do |o|
     options[:once] = o
   end
-  opts.on("-l", "--logfile PATH", "Log to a logfile") do |l|
+  opts.on("-f", "--logfile PATH", "Log to a logfile") do |l|
     options[:logfile] = l
   end
 end
