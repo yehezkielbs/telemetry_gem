@@ -278,6 +278,9 @@ module Telemetry
 
 			rescue Exception => e
 				raise e
+
+			ensure
+				http.shutdown
 			end
 		end
 	end
