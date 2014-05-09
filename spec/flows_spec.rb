@@ -131,8 +131,8 @@ describe "Flows" do
   	properties = {
       tag: "test-flow-timeseries",
       value: 33, 
-      type: "hour", 
-      label: "Alpha" 		
+      aggregation: "average", 
+      interval: "seconds" 		
    	}
   	Telemetry::Timeseries.new(properties).emit
   end
