@@ -228,6 +228,7 @@ module Telemetry
 		property :gauge_color
 		property :link
 		property :title
+		property :layout
 		property :gauges, :default => []
 	end
 
@@ -372,16 +373,15 @@ module Telemetry
 		property :title
 		property :expires_at
 		property :priority
-		property :icon
-		property :link
-		property :value, :required => true
-		property :type, :required => true
-		property :label
-		property :labels
+		property :aggregation
 		property :color
-		property :values
-		property :smoothing
+		property :interval
+		property :interval_count
+		property :label
+		property :renderer
+		property :value
 		property :value_type
+		property :values
 	end
 
 	# Upstatus
