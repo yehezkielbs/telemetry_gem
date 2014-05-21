@@ -310,7 +310,7 @@ module Telemetry
 		property :priority
 		property :icon
 		property :link
-		property :cells
+		property :cells, :default => []
 		property :table, :default => []
 		property :values, :default => []
 		property :headers, :default => []
