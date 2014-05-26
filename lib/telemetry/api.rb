@@ -208,11 +208,13 @@ module Telemetry
 					rj = MultiJson.load(response.body)
           Telemetry::logger.info "Updated: #{rj['updated'].join(', ')}" if rj.is_a?(Hash) && rj['updated'] && rj['updated'].is_a?(Array) && rj['updated'].count > 0
           Telemetry::logger.info "Skipped: #{rj['skipped'].join(', ')}" if rj.is_a?(Hash) && rj['skipped'] && rj['skipped'].is_a?(Array) && rj['skipped'].count > 0
+          Telemetry::logger.info "Errors: #{rj['errors'].join(', ')}" if rj.is_a?(Hash) && rj['errors'] && rj['errors'].is_a?(Array) && rj['errors'].count > 0
 					return rj
 				when "201"
 					rj = MultiJson.load(response.body)
           Telemetry::logger.info "Updated: #{rj['updated'].join(', ')}" if rj.is_a?(Hash) && rj['updated'] && rj['updated'].is_a?(Array) && rj['updated'].count > 0
           Telemetry::logger.info "Skipped: #{rj['skipped'].join(', ')}" if rj.is_a?(Hash) && rj['skipped'] && rj['skipped'].is_a?(Array) && rj['skipped'].count > 0
+          Telemetry::logger.info "Errors: #{rj['errors'].join(', ')}" if rj.is_a?(Hash) && rj['errors'] && rj['errors'].is_a?(Array) && rj['errors'].count > 0
 					return rj
 				when "204"
 					return "No Body"
