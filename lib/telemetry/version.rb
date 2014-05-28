@@ -1,3 +1,3 @@
 module Telemetry
-  TELEMETRY_VERSION = "1.3.9"
+  TELEMETRY_VERSION = "1.4.0"
 end

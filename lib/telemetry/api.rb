@@ -21,7 +21,7 @@ module Telemetry
 			if ENV["RACK_ENV"] == 'development'
 				@api_host = "https://api.telemetryapp.com"				
 			elsif ENV["RACK_ENV"] == 'test'
-				@api_host = "https://api.telemetryapp.com"
+				@api_host = "https://qa-api.telemetryapp.com"
 			elsif ENV["RACK_ENV"] == 'qa'
 				@api_host = "https://qa-api.telemetryapp.com"
 			else
@@ -168,6 +168,8 @@ module Telemetry
 		def self.send(method, endpoint, data = nil)
 
 			http = Net::HTTP::Persistent.new 'telemetry_api'
+			http.idle_timeout = 15
+			http.max_requests = 100
 			uri = URI("#{Telemetry.api_host}#{endpoint}")
 
 			Telemetry::logger.debug "REQ #{uri} - #{MultiJson.dump(data)}"
@@ -202,89 +204,107 @@ module Telemetry
 				code = response.code
 
 				Telemetry::logger.debug "RESP (#{((Time.now-start_time)*1000).to_i}ms): #{response.code}:#{response.body}"
+				result = Telemetry::Api.parse_response(response)
 
 				case response.code
 				when "200"
-					rj = MultiJson.load(response.body)
-          Telemetry::logger.info "Updated: #{rj['updated'].join(', ')}" if rj.is_a?(Hash) && rj['updated'] && rj['updated'].is_a?(Array) && rj['updated'].count > 0
-          Telemetry::logger.info "Skipped: #{rj['skipped'].join(', ')}" if rj.is_a?(Hash) && rj['skipped'] && rj['skipped'].is_a?(Array) && rj['skipped'].count > 0
-          Telemetry::logger.info "Errors: #{rj['errors'].join(', ')}" if rj.is_a?(Hash) && rj['errors'] && rj['errors'].is_a?(Array) && rj['errors'].count > 0
-					return rj
+					Telemetry::logger.debug "200 OK"
+					return result
 				when "201"
-					rj = MultiJson.load(response.body)
-          Telemetry::logger.info "Updated: #{rj['updated'].join(', ')}" if rj.is_a?(Hash) && rj['updated'] && rj['updated'].is_a?(Array) && rj['updated'].count > 0
-          Telemetry::logger.info "Skipped: #{rj['skipped'].join(', ')}" if rj.is_a?(Hash) && rj['skipped'] && rj['skipped'].is_a?(Array) && rj['skipped'].count > 0
-          Telemetry::logger.info "Errors: #{rj['errors'].join(', ')}" if rj.is_a?(Hash) && rj['errors'] && rj['errors'].is_a?(Array) && rj['errors'].count > 0
-					return rj
+					Telemetry::logger.debug "201 OK"
+					return result
 				when "204"
+					Telemetry::logger.debug "204 OK"
 					return "No Body"
 				when "400"
-					json = MultiJson.load(response.body)
-					error = "#{Time.now} (HTTP 400) #{json['errors'].join(',') if json && json['errors']}"
-					Telemetry::logger.debug response.body
+					error = "HTTP 400: Request error"
 					Telemetry::logger.error error
 					raise Telemetry::FormatError, error
 				when "401"
 					if Telemetry.token == nil
-						error = "#{Time.now} (HTTP 401): Authentication failed, please set Telemetry.token to your API Token. #{method.upcase} #{uri}"
+						error = "HTTP 401: Authentication failed, please set Telemetry.token to your API Token. #{method.upcase} #{uri}"
 						Telemetry::logger.error error
 						raise Telemetry::AuthenticationFailed, error
 					else
-						error = "#{Time.now} (HTTP 401): Authentication failed, please verify your token. #{method.upcase} #{uri}"
+						error = "HTTP 401: Authentication failed, please verify your token. #{method.upcase} #{uri}"
 						Telemetry::logger.error error
 						raise Telemetry::AuthenticationFailed, error
 					end
 				when "403"
-					error = "#{Time.now} (HTTP 403): Authorization failed, please check your account access. #{method.upcase} #{uri}"
+					error = "HTTP 403: Authorization failed, please check your account access. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					raise Telemetry::AuthorizationError, error
 				when "404"
-					error = "#{Time.now} (HTTP 404): Requested object not found. #{method.upcase} #{uri}"
+					error = "HTTP 404: Requested object not found. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					raise Telemetry::FlowNotFound, error
 				when "405"
-					error = "#{Time.now} (HTTP 405): Method not allowed. #{method.upcase} #{uri}"
+					error = "HTTP 405: Method not allowed. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					raise Telemetry::MethodNotAllowed, error
 				when "429"
-					error = "#{Time.now} (HTTP 429): Rate limited. Please reduce your update interval. #{method.upcase} #{uri}"
+					error = "HTTP 429: Rate limited. Please reduce your update interval. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					raise Telemetry::RateLimited, error
 				when "500"
-					error = "#{Time.now} (HTTP 500): API server error. #{method.upcase} #{uri}"
+					error = "HTTP 500: API server error. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					Telemetry::logger.error response.body
 					raise Telemetry::ServerException, error
 				when "502"
-					error = "#{Time.now} (HTTP 502): API server is down. #{method.upcase} #{uri}"
+					error = "HTTP 502: API server is down. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					raise Telemetry::Unavailable, error
 				when "503"
-					error = "#{Time.now} (HTTP 503): API server is down. #{method.upcase} #{uri}"
+					error = "HTTP 503: API server is down. #{method.upcase} #{uri}"
 					Telemetry::logger.error error
 					raise Telemetry::Unavailable, error
 				else
-					error = "#{Time.now} ERROR UNK: #{method.upcase} #{uri} #{response.body}."
+					error = "ERROR UNK: #{method.upcase} #{uri} #{response.body}."
 					raise Telemetry::UnknownError, error
 				end
 
 			rescue Errno::ETIMEDOUT => e
-				error = "#{Time.now} ERROR #{e}"
+				error = "ERROR #{e}"
 				Telemetry::logger.error error
 				raise Telemetry::ConnectionError, error
 
 			rescue Errno::ECONNREFUSED => e 
-				error = "#{Time.now} ERROR #{e}"
+				error = "ERROR #{e}"
 				Telemetry::logger.error error
 				raise Telemetry::ConnectionError, error
 
 			rescue Exception => e
 				raise e
 
-			ensure
-				http.shutdown
+			#ensure
+				#http.shutdown
 			end
 		end
+
+		def self.parse_response(response)
+			begin
+				resp_hash = MultiJson.load(response.body)
+				return nil unless resp_hash && resp_hash.is_a?(Hash)
+
+				if resp_hash["errors"] && resp_hash["errors"].is_a?(Array) && resp_hash["errors"].count > 0
+					Telemetry::logger.error "Errors: #{resp_hash['errors'].join(', ')}"
+				end
+
+				if resp_hash["updated"] && resp_hash["updated"].is_a?(Array) && resp_hash["updated"].count > 0
+					Telemetry::logger.debug "Updated: #{resp_hash['updated'].join(', ')}"
+				end
+
+				if resp_hash["skipped"] && resp_hash["skipped"].is_a?(Array) && resp_hash["skipped"].count > 0
+					Telemetry::logger.error "Skipped: #{resp_hash['skipped'].join(', ')}"
+				end
+				return resp_hash
+
+			rescue Exception => e
+				return nil
+			end
+		end
+
 	end
 
 	class FormatError < Exception
@@ -319,6 +339,8 @@ module Telemetry
 
 	class MethodNotAllowed < Exception
 	end
+
+
 
 
 end

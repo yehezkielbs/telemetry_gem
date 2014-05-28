@@ -18,6 +18,9 @@ runner.with_options do |opts|
   opts.on("-o", "--once", "Run once") do |o|
     options[:once] = o
   end
+  opts.on("-b", "--debug", "Debug") do |o|
+    Telemetry::logger.level = Logger::DEBUG
+  end
 end
 
 runner.execute do |opts|
