@@ -374,14 +374,11 @@ module Telemetry
 		property :title
 		property :expires_at
 		property :priority
-		property :aggregation
-		property :color
+		property :baseline
 		property :interval
 		property :interval_count
-		property :label
 		property :renderer
-		property :value
-		property :value_type
+		property :series_metadata
 		property :values
 	end
 
@@ -416,6 +413,8 @@ module Telemetry
 		property :delta_type
 		property :sparkline
 		property :label
+		property :rounding
+		property :abbreviate, :default => true
 	end
 
 	# Waterfall
