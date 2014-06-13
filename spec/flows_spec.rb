@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "Flows" do
   before(:all) do
   	Telemetry.token = "test-api-token"
+    Telemetry.logger.level = Logger::DEBUG
   end
 
   it "should update a Barchart", flows: true do
@@ -130,9 +131,10 @@ describe "Flows" do
    it "should update a Timeseries" do
   	properties = {
       tag: "test-flow-timeseries",
-      value: 33, 
-      aggregation: "average", 
-      interval: "seconds" 		
+      values: [33], 
+      interval: "seconds",
+      interval_count: 60, 
+      series_metadata: [{aggregation: "avg"}]		
    	}
   	Telemetry::Timeseries.new(properties).emit
   end

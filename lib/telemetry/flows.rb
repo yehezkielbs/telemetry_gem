@@ -3,7 +3,6 @@
 require 'hashie'
 require 'gibberish'
 require 'multi_json'
-require 'oj'
 
 module TelemetryFlows
 	def emit
@@ -213,9 +212,13 @@ module Telemetry
 		property :priority
 		property :icon
 		property :link
-		property :tag, :required => true
-		property :map_type, :required => true
-		property :points, :default => []
+		property :type
+		property :mapbox_id
+		property :coordinates, :required => true
+		property :markers
+		property :polylines
+		property :polygons
+		property :circles
 	end
 
 	# Multigauge

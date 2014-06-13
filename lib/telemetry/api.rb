@@ -1,7 +1,6 @@
 #/usr/bin/env ruby
 
 require 'multi_json'
-require 'oj'
 require 'net/http/persistent'
 require 'uri'
 require 'logger'
@@ -217,7 +216,7 @@ module Telemetry
 					Telemetry::logger.debug "204 OK"
 					return "No Body"
 				when "400"
-					error = "HTTP 400: Request error"
+					error = "HTTP 400: Request error "
 					Telemetry::logger.error error
 					raise Telemetry::FormatError, error
 				when "401"
