@@ -203,6 +203,11 @@ module TelemetryDaemon
 		@@tasks << [ :value, tag, frequency, offset, block ]
 	end
 
+	def video(tag, frequency = 0, offset=nil, &block)
+		@@tasks ||= []
+		@@tasks << [ :value, tag, frequency, offset, block ]
+	end
+
 	def waterfall(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
 		@@tasks << [ :waterfall, tag, frequency, offset, block ]

@@ -339,7 +339,4 @@ module Telemetry
 	class MethodNotAllowed < Exception
 	end
 
-
-
-
 end

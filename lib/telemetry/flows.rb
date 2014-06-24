@@ -400,6 +400,19 @@ module Telemetry
 		property :last_down
 	end
 
+	# Video
+	class Video < Hashie::Dash
+		include TelemetryFlows
+		property :tag, :required => true
+		property :title
+		property :expires_at
+		property :priority
+		property :icon
+		property :link
+		property :mode
+		property :url, :required => true
+	end
+
 	# Value
 	class Value < Hashie::Dash
 		include TelemetryFlows
@@ -408,6 +421,7 @@ module Telemetry
 		property :expires_at
 		property :priority
 		property :icon
+		property :label_color
 		property :link
 		property :value, :required => true
 		property :color
