@@ -284,7 +284,7 @@ module Telemetry
 		def self.parse_response(response)
 			begin
 				resp_hash = MultiJson.load(response.body)
-				return nil unless resp_hash && resp_hash.is_a?(Hash)
+				return nil unless resp_hash && (resp_hash.is_a?(Hash) || resp_hash.is_a?(Array))
 
 				if resp_hash["errors"] && resp_hash["errors"].is_a?(Array) && resp_hash["errors"].count > 0
 					Telemetry::logger.error "Errors: #{resp_hash['errors'].join(', ')}"
