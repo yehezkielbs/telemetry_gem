@@ -192,7 +192,7 @@ module Telemetry
 			request['Content-Type'] = 'application/json'
 			request['Accept-Version'] = '~ 1'
 			request['User-Agent'] = "Telemetry Ruby Gem (#{Telemetry::TELEMETRY_VERSION})"
-				
+
 			start_time = Time.now
 
 			begin
@@ -283,21 +283,23 @@ module Telemetry
 
 		def self.parse_response(response)
 			begin
-				resp_hash = MultiJson.load(response.body)
-				return nil unless resp_hash && (resp_hash.is_a?(Hash) || resp_hash.is_a?(Array))
+				resp_json = MultiJson.load(response.body)
+				return nil unless resp_json && (resp_json.is_a?(Hash) || resp_json.is_a?(Array))
 
-				if resp_hash["errors"] && resp_hash["errors"].is_a?(Array) && resp_hash["errors"].count > 0
-					Telemetry::logger.error "Errors: #{resp_hash['errors'].join(', ')}"
-				end
+				if resp_json.is_a?(Hash)
+					if resp_json["errors"] && resp_json["errors"].is_a?(Array) && resp_json["errors"].count > 0
+						Telemetry::logger.error "Errors: #{resp_json['errors'].join(', ')}"
+					end
 
-				if resp_hash["updated"] && resp_hash["updated"].is_a?(Array) && resp_hash["updated"].count > 0
-					Telemetry::logger.debug "Updated: #{resp_hash['updated'].join(', ')}"
-				end
+					if resp_json["updated"] && resp_json["updated"].is_a?(Array) && resp_json["updated"].count > 0
+						Telemetry::logger.debug "Updated: #{resp_json['updated'].join(', ')}"
+					end
 
-				if resp_hash["skipped"] && resp_hash["skipped"].is_a?(Array) && resp_hash["skipped"].count > 0
-					Telemetry::logger.error "Skipped: #{resp_hash['skipped'].join(', ')}"
-				end
-				return resp_hash
+					if resp_json["skipped"] && resp_json["skipped"].is_a?(Array) && resp_json["skipped"].count > 0
+						Telemetry::logger.error "Skipped: #{resp_json['skipped'].join(', ')}"
+          end
+        end
+        return resp_json
 
 			rescue Exception => e
 				return nil
@@ -314,7 +316,7 @@ module Telemetry
 
 	class AuthorizationError < Exception
 	end
-	
+
 	class FlowNotFound < Exception
 	end
 
