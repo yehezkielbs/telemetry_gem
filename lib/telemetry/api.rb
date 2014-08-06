@@ -89,6 +89,11 @@ module Telemetry
 			Telemetry::Api.send(:delete, "/flows/#{id}/data")
 		end
 
+    def self.notification(id, body)
+      path = "/channels/#{id}/notifications"
+      Telemetry::Api.send(:post, path, body)
+    end
+
 		def self.aggregate(bucket, value)
 			raise Telemetry::AuthenticationFailed, "Please set your Telemetry.token" unless Telemetry.token
 			return Telemetry::Api.send(:post, "/aggregations/#{bucket}", {:value => value})

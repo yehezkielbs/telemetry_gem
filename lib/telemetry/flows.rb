@@ -27,6 +27,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -39,6 +40,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -51,6 +53,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -64,6 +67,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -76,6 +80,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -88,6 +93,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -108,6 +114,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -131,6 +138,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -143,6 +151,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -159,6 +168,7 @@ module Telemetry
 	class Icon < Hashie::Dash
 		include TelemetryFlows
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -171,6 +181,7 @@ module Telemetry
 	class Image < Hashie::Dash
 		include TelemetryFlows
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -184,6 +195,7 @@ module Telemetry
 	class Iframe < Hashie::Dash
 		include TelemetryFlows
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -196,6 +208,7 @@ module Telemetry
 	class Log < Hashie::Dash
 		include TelemetryFlows
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -208,6 +221,7 @@ module Telemetry
 	class Map < Hashie::Dash
 		include TelemetryFlows
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -231,6 +245,7 @@ module Telemetry
 		property :gauge_color
 		property :link
 		property :title
+    property :opacity
 		property :layout
 		property :gauges, :default => []
 	end
@@ -244,6 +259,7 @@ module Telemetry
 		property :icon
 		property :link
 		property :title
+    property :opacity
 		property :values, :default => []
 	end
 
@@ -252,6 +268,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -267,6 +284,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -283,6 +301,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -297,6 +316,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -309,6 +329,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -325,6 +346,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -338,6 +360,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -350,6 +373,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -363,6 +387,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -375,6 +400,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :baseline
@@ -390,6 +416,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -405,12 +432,17 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
 		property :link
 		property :mode
-		property :url, :required => true
+    property :mp4
+    property :muted
+    property :ogg
+    property :poster
+    property :webm
 	end
 
 	# Value
@@ -418,6 +450,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
@@ -439,6 +472,7 @@ module Telemetry
 		include TelemetryFlows
 		property :tag, :required => true
 		property :title
+    property :opacity
 		property :expires_at
 		property :priority
 		property :icon
