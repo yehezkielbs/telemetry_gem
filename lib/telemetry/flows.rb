@@ -38,6 +38,18 @@ module Telemetry
   	property :bars, :default => []
 	end
 
+  # Bulletchart
+  class Box < Hashie::Dash
+    include TelemetryFlows
+    property :tag, :required => true
+    property :title
+    property :opacity
+    property :expires_at
+    property :priority
+    property :icon
+    property :link
+  end
+
 	# Bulletchart
 	class Bulletchart < Hashie::Dash
 		include TelemetryFlows
@@ -50,6 +62,20 @@ module Telemetry
 		property :link
   	property :bulletcharts, :default => []
 	end
+
+  # Clock
+  class Clock < Hashie::Dash
+    include TelemetryFlows
+    property :tag, :required => true
+    property :title
+    property :opacity
+    property :expires_at
+    property :priority
+    property :icon
+    property :link
+    property :style
+    property :timezone
+  end
 
 	# Countdown
 	class Countdown < Hashie::Dash

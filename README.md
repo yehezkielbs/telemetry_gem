@@ -42,13 +42,18 @@ Supported flow object variants are as follows:
 
 - Telemetry::Barchart
 - Telemetry::Bulletchart
+- Telemetry::Clock
+- Telemetry::Compass
 - Telemetry::Countdown
+- Telemetry::Funnelchart
 - Telemetry::Gauge
 - Telemetry::Graph
 - Telemetry::Grid
 - Telemetry::Icon
+- Telemetry::Iframe
 - Telemetry::Image
 - Telemetry::Log
+- Telemetry::Map
 - Telemetry::Multigauge
 - Telemetry::Multivalue
 - Telemetry::Piechart
@@ -62,7 +67,9 @@ Supported flow object variants are as follows:
 - Telemetry::Timeline
 - Telemetry::Upstatus
 - Telemetry::Value
+- Telemetry::Video
 - Telemetry::Waterfall
+- Telemetry::Weather
 
 For documentation on the different properties for the various data elements please see the [data documentation](https://www.telemetryapp.com/user/documentation/data) pages.
 

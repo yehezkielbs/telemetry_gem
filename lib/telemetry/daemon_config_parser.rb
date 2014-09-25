@@ -73,10 +73,25 @@ module TelemetryDaemon
 		@@tasks << [ :value, tag, frequency, offset, block ]
 	end
 
-	def countdown(tag, frequency = 0, offset=nil, &block)
-		@@tasks ||= []
-		@@tasks << [ :countdown, tag, frequency, offset, block ]
-	end
+  def box(tag, frequency = 0, offset=nil, &block)
+    @@tasks ||= []
+    @@tasks << [ :countdown, tag, frequency, offset, block ]
+  end
+
+  def clock(tag, frequency = 0, offset=nil, &block)
+    @@tasks ||= []
+    @@tasks << [ :countdown, tag, frequency, offset, block ]
+  end
+
+  def countdown(tag, frequency = 0, offset=nil, &block)
+    @@tasks ||= []
+    @@tasks << [ :countdown, tag, frequency, offset, block ]
+  end
+
+  def compass(tag, frequency = 0, offset=nil, &block)
+    @@tasks ||= []
+    @@tasks << [ :countdown, tag, frequency, offset, block ]
+  end
 
 	def custom(tag, frequency = 0, offset=nil, &block)
 		@@tasks ||= []
@@ -212,6 +227,11 @@ module TelemetryDaemon
 		@@tasks ||= []
 		@@tasks << [ :waterfall, tag, frequency, offset, block ]
 	end
+
+  def weather(tag, frequency = 0, offset=nil, &block)
+    @@tasks ||= []
+    @@tasks << [ :countdown, tag, frequency, offset, block ]
+  end
 
 	def run_scheduled_flow_updates
 		@@buffer = {}
