@@ -32,6 +32,9 @@ module Telemetry
 		property :priority
 		property :icon
 		property :link
+    property :min
+    property :max
+    property :sort
   	property :bars, :default => []
 	end
 
@@ -61,6 +64,20 @@ module Telemetry
 		property :time, :required => true
 		property :message, :required => true
 	end
+
+  # Compass
+  class Compass < Hashie::Dash
+    include TelemetryFlows
+    property :tag, :required => true
+    property :title
+    property :opacity
+    property :expires_at
+    property :priority
+    property :icon
+    property :label
+    property :renderer
+    property :heading, :required => true
+  end
 
 	# Custom
 	class Custom < Hashie::Dash
@@ -98,11 +115,14 @@ module Telemetry
 		property :priority
 		property :icon
 		property :link
+    property :label
 		property :value, :required => true
 		property :value_color
-		property :max
+    property :min
+    property :max
 		property :gauge_color
-		property :range
+    property :renderer
+    property :range
 		property :value_2
 		property :value_2_color
 		property :value_2_label
@@ -482,5 +502,18 @@ module Telemetry
 		property :value_type
 		property :spread
 	end
+
+  # Weather
+  class Weather < Hashie::Dash
+    include TelemetryFlows
+    property :tag, :required => true
+    property :title
+    property :opacity
+    property :expires_at
+    property :priority
+    property :icon
+    property :location, :required => true
+    property :temperature
+  end
 
 end
