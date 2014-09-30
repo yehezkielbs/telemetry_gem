@@ -21,7 +21,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "dante", "~> 0.2"
   gem.add_dependency "hashie", "~> 2.0"
   gem.add_dependency "net-http-persistent", "~> 2.9"
-  gem.add_dependency "gibberish", "~> 1.4"
   gem.add_development_dependency "rspec", "~> 2.14"
   gem.add_development_dependency "rake", "~> 10.1"
 end

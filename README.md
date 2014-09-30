@@ -85,26 +85,6 @@ You may send data to more than one flow in a single API call.  To do this constr
 	flows << Telemetry::Gauge.new({tag: "test-flow-gauge", value: 33})
 	Telemetry::Api.flow_update_batch(flows)
 
-## Data Encryption
-
-While Telemetry is SSL based and we protect our customers data with utmost caution, some corporate policies will not approve of any third party having the possibility of access to their data.  Therefore we support optional encryption of the data with AES-256-CBC before sending it to the Telemetry API.   The Telemetry Javascript application that runs in your browser to view the data can be configured with the same key in order to decrypt the data and display it for you while making it invisible to any prying eyes in the middle.  
-
-	require 'telemetry'
-
-	Telemetry.token = "test-api-token"
-	ENCRYPTIONKEY = "Unique Random Password"
-	flow = Telemetry::Value.new(tag: "test-flow-value", value: 3434)
-	flow.encrypt(ENCRYPTIONKEY)  
-	flow.emit
-
-Please be careful that your data isn't able to be validated by the Telemetry API since it cannot see it.  Therefore we suggest testing with dummy uncrypted data first.  Additionally there will be performance implications for large amounts of changing data for some browsers. 
-
-In order to view encrypted data in your browser you will need to append the key to the end of the URL by adding it like the following: 
-
-	https://boards.telemetryapp.com/board.html?channel_id=467177c0126e4d8d4809c2414b995e01#encryption_key=ENCRYPTIONKEY
-
-Note that the # part will not be sent to the server, it's a local argument only visible to the local javascript running in the browser.  Certain attributes like tags and priority will not be encrypted as they're needed by the system. 
-
 ## Virtual Channels
 
 This gem supports virtual channel sending.  You must have a pro or higher account to use virtual channels.  In order to use this you must call:
