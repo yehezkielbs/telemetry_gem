@@ -444,6 +444,7 @@ module Telemetry
 		property :renderer
 		property :series_metadata
 		property :values
+		property :timestamp
 	end
 
 	# Upstatus
