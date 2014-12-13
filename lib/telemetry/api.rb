@@ -271,18 +271,18 @@ module Telemetry
 			rescue Errno::ETIMEDOUT => e
 				error = "ERROR #{e}"
 				Telemetry::logger.error error
+				http.shutdown
 				raise Telemetry::ConnectionError, error
 
 			rescue Errno::ECONNREFUSED => e 
 				error = "ERROR #{e}"
 				Telemetry::logger.error error
+				http.shutdown
 				raise Telemetry::ConnectionError, error
 
 			rescue Exception => e
+				http.shutdown
 				raise e
-
-			#ensure
-				#http.shutdown
 			end
 		end
 
