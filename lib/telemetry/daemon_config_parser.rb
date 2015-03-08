@@ -285,8 +285,7 @@ module TelemetryDaemon
         set expires_at: Time.now.to_i + @@flows_expire_in
       end
 
-			# # Append the variant
-			# values = @@h.merge({variant: variant})
+			values = @@h
 
 			# Telemetry.logger.debug "  - Values for #{task[0]} #{task[1]}:\n#{values}\n#{@@last_values[tag]}"
 

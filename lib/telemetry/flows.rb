@@ -371,7 +371,6 @@ module Telemetry
 		property :link
 		property :cells, :default => []
 		property :table, :default => []
-		property :values, :default => []
 		property :headers, :default => []
 		property :colors, :default => []
 	end
